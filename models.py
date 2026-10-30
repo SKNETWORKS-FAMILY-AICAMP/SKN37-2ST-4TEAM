@@ -47,3 +47,31 @@ class ChurnCNN1D(nn.Module):
         out = F.relu(self.conv2(out))
         out = self.pool(out).squeeze(2)
         return self.fc(out)
+
+class ChurnTransformer(nn.Module):
+    def __init__(self, vocab_size=50, embedding_dim=32, num_heads=4, hidden_dim=64, num_layers=2, dropout=0.1):
+        super().__init__()
+        self.embedding = nn.Embedding(vocab_size, embedding_dim)
+        self.pos_embedding = nn.Embedding(1000, embedding_dim) # 최대 시퀀스 길이 고려
+        
+        encoder_layer = nn.TransformerEncoderLayer(
+            d_model=embedding_dim, 
+            nhead=num_heads, 
+            dim_feedforward=hidden_dim, 
+            dropout=dropout,
+            batch_first=True
+        )
+        self.transformer_encoder = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
+        self.fc = nn.Linear(embedding_dim, 1)
+        
+    def forward(self, x):
+        batch_size, seq_len = x.size()
+        positions = torch.arange(0, seq_len, device=x.device).unsqueeze(0).expand(batch_size, seq_len)
+        
+        out = self.embedding(x) + self.pos_embedding(positions)
+        out = self.transformer_encoder(out)
+        
+        # 시퀀스 차원에 대해 평균 풀링(Global Average Pooling) 수행
+        out = out.mean(dim=1)
+        out = self.fc(out)
+        return out

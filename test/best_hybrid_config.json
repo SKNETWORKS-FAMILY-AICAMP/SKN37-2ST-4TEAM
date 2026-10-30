@@ -1,8 +1,8 @@
 {
-    "best_ml_model": "catboost_model.cbm",
+    "best_ml_model": "ab_model.pkl",
     "best_dl_model": "lstm_model_weights.pth",
-    "ml_weight": 0.65,
-    "dl_weight": 0.35,
-    "best_auc": 0.8946405195531435,
-    "best_threshold": 0.21908355596342385
+    "ml_weight": 0.6,
+    "dl_weight": 0.4,
+    "best_auc": 0.8994091469087069,
+    "best_threshold": 0.39822677201244505
 }

@@ -1,32 +1,82 @@
 {
+    "ab_model.pkl": {
+        "model_type": "machine_learning",
+        "auc_score": 0.729222085334272,
+        "best_threshold": 0.3377626516911192
+    },
+    "dt_model.pkl": {
+        "model_type": "machine_learning",
+        "auc_score": 0.6879503683403315,
+        "best_threshold": 0.06788990825688074
+    },
+    "et_model.pkl": {
+        "model_type": "machine_learning",
+        "auc_score": 0.726404847509617,
+        "best_threshold": 0.06420489908509908
+    },
+    "hgb_model.pkl": {
+        "model_type": "machine_learning",
+        "auc_score": 0.7216013375908279,
+        "best_threshold": 0.05580209562781787
+    },
+    "knn_model.pkl": {
+        "model_type": "machine_learning",
+        "auc_score": 0.5990357780403792,
+        "best_threshold": 0.2
+    },
     "lgb_model.pkl": {
         "model_type": "machine_learning",
-        "auc_score": 0.7231810626889615,
-        "best_threshold": 0.06334511388595745
+        "auc_score": 0.7373016870741458,
+        "best_threshold": 0.06121382216934681
     },
     "lr_model.pkl": {
         "model_type": "machine_learning",
-        "auc_score": 0.7094699264418263,
-        "best_threshold": 0.04330747302916457
+        "auc_score": 0.7226083021144998,
+        "best_threshold": 0.049297460292393507
+    },
+    "mlp_model.pkl": {
+        "model_type": "machine_learning",
+        "auc_score": 0.5881577954894024,
+        "best_threshold": 0.02958348316680194
+    },
+    "nb_model.pkl": {
+        "model_type": "machine_learning",
+        "auc_score": 0.6965818520101577,
+        "best_threshold": 0.0006072286093592005
     },
     "rf_model.pkl": {
         "model_type": "machine_learning",
-        "auc_score": 0.7083797573102761,
-        "best_threshold": 0.05497884965326606
+        "auc_score": 0.725929650768109,
+        "best_threshold": 0.06054856791997615
+    },
+    "svc_model.pkl": {
+        "model_type": "machine_learning",
+        "auc_score": 0.4926608503255978,
+        "best_threshold": 0.034100742676488306
+    },
+    "xgb_model.pkl": {
+        "model_type": "machine_learning",
+        "auc_score": 0.7330915445151234,
+        "best_threshold": 0.058718323707580566
     },
     "catboost_model.cbm": {
         "model_type": "machine_learning",
-        "auc_score": 0.7210162579238493,
-        "best_threshold": 0.07308398569365016
+        "auc_score": 0.7336635405928645,
+        "best_threshold": 0.08253919904443963
     },
     "cnn1d_model_weights.pth": {
         "model_type": "deep_learning",
-        "auc_score": 0.8295240959857205,
-        "best_threshold": 0.4058452844619751
+        "auc_score": 0.8452656324642344,
+        "best_threshold": 0.38332414627075195
     },
     "lstm_model_weights.pth": {
         "model_type": "deep_learning",
-        "auc_score": 0.8557502891348829,
-        "best_threshold": 0.5251902937889099
+        "auc_score": 0.8684635305357906,
+        "best_threshold": 0.5051692128181458
+    },
+    "transformer_model_weights.pth": {
+        "model_type": "deep_learning",
+        "auc_score": 0.8631420813114424,
+        "best_threshold": 0.4156128764152527
     }
 }
