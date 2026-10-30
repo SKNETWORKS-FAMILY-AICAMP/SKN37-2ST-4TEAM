@@ -1,0 +1,122 @@
+[
+  {
+    "파일": "data/processed/customer_features_20181101_v1.csv",
+    "크기_bytes": 1031146,
+    "sha256": "7acd774abe3b2f02bec64d275043dd0638f5a6035aa45b2d863286519ca72355"
+  },
+  {
+    "파일": "data/processed/customer_features_20181101_v1_with_split.csv",
+    "크기_bytes": 1137265,
+    "sha256": "0ea779266b01aae67b29ec102dee4a7f54b310dd5a67d66ab6e7ac25484b598e"
+  },
+  {
+    "파일": "data/processed/train_20181101_v1.csv",
+    "크기_bytes": 722030,
+    "sha256": "d85fb084befc396f682d95ef61178763f2b7a6029bb126f9bf6c28c200dd7334"
+  },
+  {
+    "파일": "data/processed/valid_20181101_v1.csv",
+    "크기_bytes": 155005,
+    "sha256": "38681727f258a26ad31cb66b7fbc179213375e0b1bf81cc401a686e2f7500c7b"
+  },
+  {
+    "파일": "data/processed/test_20181101_v1.csv",
+    "크기_bytes": 154587,
+    "sha256": "f22526d47244d2e824de81e4ed5c9565dd595439e2af0338d5e7184842a7bda4"
+  },
+  {
+    "파일": "data/processed/customer_split_20181101_v1.csv",
+    "크기_bytes": 269382,
+    "sha256": "40368097e7fdbab04dda82d8d07263519f969347c8034477f161c173be9b2e6d"
+  },
+  {
+    "파일": "data/processed/customer_sequences_20181101_v1.jsonl",
+    "크기_bytes": 38715269,
+    "sha256": "2becb3332c9b1a044126dae9c979d234a92fdf425d5abbbb5ed9d2c6d9a9d17a"
+  },
+  {
+    "파일": "data/processed/README_DATA.md",
+    "크기_bytes": 6119,
+    "sha256": "5a1048eb790833940ae47f1fe084890b0f4dbb7b3ef309945f8e3545dfa3d713"
+  },
+  {
+    "파일": "reports/01_원본_구조_자료형_검사.json",
+    "크기_bytes": 2801,
+    "sha256": "8feb643aca0779cbe61a0da908baa28d422ab411a4c882a04e31dc8b011eb761"
+  },
+  {
+    "파일": "reports/02_누락_발생상황_검사.json",
+    "크기_bytes": 2400,
+    "sha256": "8257b68a168fae27128f1e14a9f4a5b7e3a0580c5e64024bc4da8c4f02ec36d6"
+  },
+  {
+    "파일": "reports/03_비로그인_공통ID_점검.json",
+    "크기_bytes": 413,
+    "sha256": "763dc27311a21a59d10c4173a3580aef280e9ba0dc7f3e53b9219c8adf138b0e"
+  },
+  {
+    "파일": "reports/04_고객분석_제외기준.json",
+    "크기_bytes": 464,
+    "sha256": "d2ebf98a8a1e1aa02e60f743ee7e9ea2ce8de142c03eaea0e5309f3379a55cfa"
+  },
+  {
+    "파일": "reports/05_숫자범위_범주값_검사.json",
+    "크기_bytes": 1786,
+    "sha256": "c8051a4bbf16d5a3231668bf5f0882ad446788402f2a993b53abe3308e4cd5a6"
+  },
+  {
+    "파일": "reports/06_가입시각_정합성_검사.json",
+    "크기_bytes": 30479,
+    "sha256": "4a154af47ed91f4684364537e7ff47419b4e8350b77b8974a168676173eacda6"
+  },
+  {
+    "파일": "reports/07_가입시각_처리기준.json",
+    "크기_bytes": 821,
+    "sha256": "19a8a8d27b5a1557dd00e699ece130ef92ec21c81a4fdc91afd0bb23ce21280b"
+  },
+  {
+    "파일": "reports/08_분석기간_설정.json",
+    "크기_bytes": 434,
+    "sha256": "55eefec8c1a8e330667b0671241dcd2ab6bd79df67f585e63345c94b97716376"
+  },
+  {
+    "파일": "reports/09_분석대상_정답라벨.json",
+    "크기_bytes": 332,
+    "sha256": "0869679c1ac44a456f2674b142abb385e2d72358c1eb14bdb8c5ffeff9aa2ab9"
+  },
+  {
+    "파일": "reports/10_피처_정의서.json",
+    "크기_bytes": 2264,
+    "sha256": "5c076e26fe6e61af49c9468fb861dd73dff203c082c5478e28465de43e8e676a"
+  },
+  {
+    "파일": "reports/11_고객별CSV_저장확인.json",
+    "크기_bytes": 317,
+    "sha256": "532e8dbf6f534b957f7bb368e284ceeac42dbc6573f05c6a1f27fe340840dc48"
+  },
+  {
+    "파일": "reports/12_배포용CSV_저장확인.json",
+    "크기_bytes": 940,
+    "sha256": "3d1bc349e8cb380fb0985ee83d361be4b58fe590ee8afe77db871d818cbf933e"
+  },
+  {
+    "파일": "reports/13_행동시퀀스_저장확인.json",
+    "크기_bytes": 522,
+    "sha256": "6acfb11bbfb5b46ccc6bb4c28a452efb2d9ce1c00be3ab32b40f595b92d9855c"
+  },
+  {
+    "파일": "reports/14_학습데이터_수치분포.csv",
+    "크기_bytes": 904,
+    "sha256": "f468f3ee6d60fc606f62f6d35cd668f6cc89ca74f8592936aebc813a3097e78e"
+  },
+  {
+    "파일": "reports/15_수치형피처_처리기준.json",
+    "크기_bytes": 1259,
+    "sha256": "f3f866ed88cdf5ab99cc43ca99808aab26098276861f20b3cfe33b24c0d46130"
+  },
+  {
+    "파일": "01_데이터검증_및_전처리.ipynb",
+    "크기_bytes": 130252,
+    "sha256": "efb78f47ab16d2737be108da80da338eb659e6037e1050da87b822f03117cece"
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "파일": "D:\\Study\\study\\Project\\2nd Project\\data\\processed\\customer_features_20181101_v1.csv",
+  "고객 수": 18139,
+  "열 수": 16,
+  "입력 피처 수": 14,
+  "이탈 고객 수": 1035,
+  "저장 전후 값 일치": true,
+  "학습_검증_최종평가_분할": "아직 적용하지 않음"
+}

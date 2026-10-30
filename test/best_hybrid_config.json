@@ -1,0 +1,8 @@
+{
+    "best_ml_model": "lgb_model.pkl",
+    "best_dl_model": "lstm_model_weights.pth",
+    "ml_weight": 0.7,
+    "dl_weight": 0.30000000000000004,
+    "best_auc": 0.8910423965645552,
+    "best_threshold": 0.1958074833250014
+}
