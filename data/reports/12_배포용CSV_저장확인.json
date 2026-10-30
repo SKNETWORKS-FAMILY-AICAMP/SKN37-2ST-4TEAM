@@ -1,0 +1,31 @@
+{
+  "통합 파일": "D:\\Study\\study\\Project\\2nd Project\\data\\processed\\customer_features_20181101_v1_with_split.csv",
+  "통합 고객 수": 18139,
+  "통합 열 수": 17,
+  "개별 파일": {
+    "train": "D:\\Study\\study\\Project\\2nd Project\\data\\processed\\train_20181101_v1.csv",
+    "valid": "D:\\Study\\study\\Project\\2nd Project\\data\\processed\\valid_20181101_v1.csv",
+    "test": "D:\\Study\\study\\Project\\2nd Project\\data\\processed\\test_20181101_v1.csv"
+  },
+  "개별 파일 집계": [
+    {
+      "구분": "train",
+      "고객 수": 12697,
+      "이탈 고객 수": 724,
+      "열 수": 16
+    },
+    {
+      "구분": "valid",
+      "고객 수": 2721,
+      "이탈 고객 수": 156,
+      "열 수": 16
+    },
+    {
+      "구분": "test",
+      "고객 수": 2721,
+      "이탈 고객 수": 155,
+      "열 수": 16
+    }
+  ],
+  "통합_개별_분할표_일치": true
+}

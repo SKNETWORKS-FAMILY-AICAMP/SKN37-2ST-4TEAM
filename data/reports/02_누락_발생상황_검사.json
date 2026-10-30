@@ -1,0 +1,121 @@
+{
+  "곡정보_누락_이벤트별": {
+    "Home": {
+      "song": 1343102,
+      "artist": 1343102,
+      "length": 1343102
+    },
+    "Thumbs Up": {
+      "song": 1151465,
+      "artist": 1151465,
+      "length": 1151465
+    },
+    "Error": {
+      "song": 25962,
+      "artist": 25962,
+      "length": 25962
+    },
+    "Help": {
+      "song": 155100,
+      "artist": 155100,
+      "length": 155100
+    },
+    "Add to Playlist": {
+      "song": 597921,
+      "artist": 597921,
+      "length": 597921
+    },
+    "Roll Advert": {
+      "song": 385212,
+      "artist": 385212,
+      "length": 385212
+    },
+    "Login": {
+      "song": 296350,
+      "artist": 296350,
+      "length": 296350
+    },
+    "Thumbs Down": {
+      "song": 239212,
+      "artist": 239212,
+      "length": 239212
+    },
+    "Settings": {
+      "song": 147074,
+      "artist": 147074,
+      "length": 147074
+    },
+    "About": {
+      "song": 92759,
+      "artist": 92759,
+      "length": 92759
+    },
+    "Add Friend": {
+      "song": 381664,
+      "artist": 381664,
+      "length": 381664
+    },
+    "Upgrade": {
+      "song": 50507,
+      "artist": 50507,
+      "length": 50507
+    },
+    "Submit Upgrade": {
+      "song": 15135,
+      "artist": 15135,
+      "length": 15135
+    },
+    "Logout": {
+      "song": 296005,
+      "artist": 296005,
+      "length": 296005
+    },
+    "Downgrade": {
+      "song": 184240,
+      "artist": 184240,
+      "length": 184240
+    },
+    "Save Settings": {
+      "song": 29516,
+      "artist": 29516,
+      "length": 29516
+    },
+    "Submit Downgrade": {
+      "song": 6494,
+      "artist": 6494,
+      "length": 6494
+    },
+    "Cancel": {
+      "song": 5003,
+      "artist": 5003,
+      "length": 5003
+    },
+    "Cancellation Confirmation": {
+      "song": 5003,
+      "artist": 5003,
+      "length": 5003
+    },
+    "Register": {
+      "song": 802,
+      "artist": 802,
+      "length": 802
+    },
+    "Submit Registration": {
+      "song": 401,
+      "artist": 401,
+      "length": 401
+    }
+  },
+  "곡재생_이벤트의_누락": {},
+  "가입시각_누락_인증상태별": {
+    "Logged Out": 774285,
+    "Guest": 4194
+  },
+  "가입시각_누락_고유고객ID수": 1,
+  "가입시각_누락_상위고객ID": [
+    [
+      "1261737",
+      778479
+    ]
+  ]
+}
