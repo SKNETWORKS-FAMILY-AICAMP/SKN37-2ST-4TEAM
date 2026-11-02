@@ -24,11 +24,9 @@ header[data-testid="stHeader"] { background: transparent; }
 [data-testid="stAppDeployButton"], .stDeployButton { display: none; }
 section[data-testid="stSidebar"] { background: #08080C; border-right: 1px solid var(--line); }
 section[data-testid="stSidebar"] > div { padding-bottom: 90px; }
-/* 메뉴 라디오: 동그라미 숨기고 음악 앱 메뉴처럼 (Streamlit 신·구 버전 모두) */
+/* 사이드바 메뉴: Streamlit 버전별 라디오 DOM 차이를 고려해 항목과 라벨은 숨기지 않습니다. */
 section[data-testid="stSidebar"] [role="radiogroup"] { width: 100%%; gap: 2px; align-items: stretch !important; }
 section[data-testid="stSidebar"] [data-testid="stRadio"], section[data-testid="stSidebar"] [data-testid="stRadio"] > div { width: 100%%; }
-section[data-testid="stSidebar"] [data-testid="stRadioOption"] > div > div:first-child,
-section[data-testid="stSidebar"] [data-baseweb="radio"] > div:first-child { display: none !important; }
 section[data-testid="stSidebar"] [data-testid="stRadioOption"],
 section[data-testid="stSidebar"] [data-baseweb="radio"] { display: flex !important; width: 100%% !important; box-sizing: border-box;
   padding: 10px 14px; border-radius: 10px; margin: 0;

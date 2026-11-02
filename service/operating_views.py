@@ -37,7 +37,8 @@ def show_result(result):
 
 
 def response_results(active_date):
-    ui.section('대응 후 이탈이 줄었나요?', '연락·혜택을 제공한 고객과 같은 기간의 비교 고객 결과를 기록합니다.')
+    ui.section('대응 후 이탈이 줄었나요?', '같은 점수 구간에서 대응군과 비교군을 나누고, 같은 14일 동안 관찰한 실제 결과를 기록합니다.')
+    st.caption('가능하면 고객을 무작위로 나누세요. 점수가 높은 고객을 골랐다는 사실만으로 혜택의 효과가 입증되지는 않습니다.')
     saved = O.load_campaigns()
     if not saved:
         st.info('아직 기록한 대응 결과가 없습니다. 14일 관찰을 마친 캠페인부터 입력하세요.')
@@ -51,7 +52,7 @@ def response_results(active_date):
     with st.expander('새 대응 결과 기록', expanded=not saved):
         with st.form('response_result_form'):
             a, b = st.columns(2)
-            name = a.text_input('캠페인 이름', placeholder='예: 이용 감소 고객 맞춤 추천')
+            name = a.text_input('캠페인 · 점수 구간 · 혜택 이름', placeholder='예: 고위험군 · 맞춤 플레이리스트와 30% 할인')
             start = b.date_input('대응 시작일', value=active_date)
             end = start + timedelta(days=14)
             st.caption(f'결과 확인일: {end:%Y-%m-%d} · 실제 관찰한 고객 수만 입력하세요.')
