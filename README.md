@@ -38,8 +38,6 @@
 | 데이터 저장 | ![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat&logo=sqlite&logoColor=white) |
 | 버전 관리 | ![Git](https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white) ![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white) |
 
-> 최종 시연 앱은 AdaBoost 60%와 LSTM 40%의 모델 출력을 결합해 고객의 이탈 위험 점수를 계산합니다.
-
 ### 팀 소개와 역할 분담
 
 | 이름 | 주요 수행 내용 |
