@@ -23,6 +23,20 @@
 
 작성 기준: 2026년 11월 2일. 앱 이미지는 실제 캡처 교체 전의 기능 설명 도식입니다.
 
+### 기술 스택
+
+| 구분 | 기술 |
+|---|---|
+| 프론트엔드·대시보드 | ![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat&logo=streamlit&logoColor=white) ![Plotly](https://img.shields.io/badge/Plotly-3F4F75?style=flat&logo=plotly&logoColor=white) ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white) ![CSS](https://img.shields.io/badge/CSS-663399?style=flat&logo=css&logoColor=white) |
+| 언어·데이터 처리 | ![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=flat&logo=python&logoColor=white) ![Pandas](https://img.shields.io/badge/Pandas-150458?style=flat&logo=pandas&logoColor=white) ![NumPy](https://img.shields.io/badge/NumPy-013243?style=flat&logo=numpy&logoColor=white) |
+| 머신러닝 | ![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?style=flat&logo=scikitlearn&logoColor=white) ![AdaBoost](https://img.shields.io/badge/AdaBoost-E67E22?style=flat) ![XGBoost](https://img.shields.io/badge/XGBoost-337AB7?style=flat) ![LightGBM](https://img.shields.io/badge/LightGBM-4B8B3B?style=flat) ![CatBoost](https://img.shields.io/badge/CatBoost-FFCC00?style=flat) |
+| 딥러닝 | ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=flat&logo=pytorch&logoColor=white) ![LSTM](https://img.shields.io/badge/LSTM-8E44AD?style=flat) ![CNN](https://img.shields.io/badge/CNN-2980B9?style=flat) ![Transformer](https://img.shields.io/badge/Transformer-16A085?style=flat) |
+| 모델 저장·로딩 | ![Joblib](https://img.shields.io/badge/Joblib-4E9A06?style=flat) |
+| 데이터 저장 | ![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat&logo=sqlite&logoColor=white) |
+| 버전 관리 | ![Git](https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white) ![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white) |
+
+> 최종 시연 앱은 AdaBoost 60%와 LSTM 40%의 모델 출력을 결합해 고객의 이탈 위험 점수를 계산합니다.
+
 ### 팀 소개와 역할 분담
 
 | 이름 | 주요 수행 내용 |
