@@ -42,9 +42,25 @@ streamlit run service/app.py        # 저장소 폴더에서 실행 → http://l
 - **고객별 이유**: 피처 하나를 일반 유지 고객 수준(학습셋 유지 고객 중앙값)으로 바꾸면 점수가 얼마나 내려가는지
 - **추천 활동**: `service/core.py`의 `RULES`에 정의한 규칙 예시. 실제 효과는 '성능 지표 → 대응 효과'처럼 대조군을 두고 확인
 
-## 팀 하이브리드(LightGBM + LSTM, AUC 0.891)를 쓰지 않은 이유
+## 팀 딥러닝·하이브리드를 서비스에 넣지 않은 이유
 
-- `dl_sequence_tensor.npy`는 마지막 토큰 하나만으로 ROC-AUC 0.846이 나옵니다. LSTM에서 마지막 토큰만 흔한 값으로 바꾸면 테스트 AUC가 0.855 → 0.568로 떨어집니다.
-- 이 텐서는 모든 고객이 길이 50이지만, 팀 공통 시퀀스(관찰 28일)에서는 10.2%가 50개 미만입니다. 관찰 기간 밖(해지 직전) 행동이 섞인 것으로 보입니다.
-- 하이브리드 가중치·임계값을 테스트셋으로 골랐고, 팀 공통 분할 대신 다시 나눈 분할(테스트 3,628명)을 썼습니다.
-- 기존 `lgb_model.pkl`은 `user_id`가 입력에 들어가고(`drop_cols`에 `userId`로 적혀 있음), `level_last`가 숫자 변환 과정에서 모두 0이 됩니다.
+2026-10-30 저장소 기준입니다. 팀 딥러닝 입력이 고쳐지면 다시 검토합니다.
+
+- 팀 딥러닝 노트북의 시퀀스 입력(`train.npy`·`valid.npy`·`test.npy`, 그 전에는 `dl_sequence_tensor.npy`)은 **마지막 칸 하나만으로 테스트 ROC-AUC 0.84**가 나옵니다. 관찰 기간의 행동만 들어 있다면 0.55 근처여야 합니다.
+- 이 숫자들은 팀 공통 `customer_sequences_20181101_v1.jsonl`의 행동과 대응하지 않습니다. 같은 위치를 비교하면 어떤 숫자든 65~80%가 NextSong입니다.
+- 공통 jsonl로 시퀀스를 다시 만들어 같은 구조의 LSTM을 학습하면 테스트 ROC-AUC는 0.60이었습니다. 이 LSTM과 섞은 하이브리드를 검증셋으로 골라도 LightGBM 단독(0.737)보다 낫지 않았습니다.
+- 그래서 서비스는 정형 피처 14개로 학습한 머신러닝 4종과 다층 신경망 2종만 씁니다.
+
+시퀀스 입력 점검 코드 (저장소 폴더에서 실행, 0.55 근처면 정상):
+
+```python
+import numpy as np, pandas as pd
+from sklearn.metrics import roc_auc_score
+D = "./data/data/processed"
+Xtr, Xte = np.load(f"{D}/train.npy"), np.load(f"{D}/test.npy")
+ytr = pd.read_csv(f"{D}/train_20181101_v1.csv")["churn"].values
+yte = pd.read_csv(f"{D}/test_20181101_v1.csv")["churn"].values
+rate = pd.Series(ytr).groupby(Xtr[:, -1]).mean()           # 학습셋: 마지막 칸 값별 이탈률
+score = pd.Series(Xte[:, -1]).map(rate).fillna(ytr.mean())
+print(roc_auc_score(yte, score))
+```

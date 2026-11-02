@@ -1,17 +1,8 @@
-"""Churn Care 서비스 로직 (화면과 분리).
+"""고객 이탈 대응 서비스의 모델·집계 로직.
 
-모델
-- 머신러닝: LightGBM(팀 노트북 설정) · XGBoost · CatBoost · HistGradientBoosting (설치된 것만)
-- 신경망: 다층 신경망(MLP) 2종 (sklearn, 추가 설치 없음)
-- 모두 팀 공통 분할 사용: train 학습 / valid 조기 종료·판정 기준 / test 성능 보고만
-- 입력은 팀 공통 피처 14개 (user_id 제외, level_last는 free=0·paid=1)
-
-위험 점수 (0~100)
-- 모델마다 확률 크기가 달라서 그대로 섞으면 안 됨 → 검증셋 확률 분포에서의 순위(백분위)로 바꿈
-  예) 90점 = 검증 고객 90%보다 위험. 두 모델 결합은 점수끼리 가중 평균
-- 판정 기준(몇 점 이상이면 이탈 예상)은 운영 설정마다 검증셋에서 F2가 최대인 점수로 자동 계산
-
-고객별 이유: 피처 하나를 일반 유지 고객 수준(학습셋 유지 고객 중앙값)으로 바꾸면 점수가 얼마나 내려가는지
+확정 조합은 저장된 확률 비중과 판정 기준을 그대로 사용합니다.
+상세 옵션의 단독·수동 결합은 검증 자료 기준 백분위 점수를 사용합니다.
+고객 번호와 기준일에 맞는 시퀀스만 연결하며 앱에서 학습·재탐색하지 않습니다.
 """
 from __future__ import annotations
 
@@ -28,9 +19,12 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import (average_precision_score, confusion_matrix, fbeta_score, precision_recall_curve,
                              precision_score, recall_score, roc_auc_score, roc_curve)
+from validation import prepare_customers, InputError, read_customers
+import storage as snapshot_storage
+from sequence_runtime import SequenceAdapter, SequenceInputError
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA = ROOT / "data" / "data" / "processed" / "customer_features_20181101_v1_with_split.csv"
+DATA = ROOT / "data" / "processed" / "customer_features_20181101_v1_with_split.csv"
 MODEL_DIR = ROOT / "model" / "service"
 STORE = ROOT / "service_data"
 
@@ -50,7 +44,7 @@ NN_SPECS = {
     "mlp_small": ("다층 신경망 · 32·16", (32, 16)),
     "mlp_large": ("다층 신경망 · 128·64·32", (128, 64, 32)),
 }
-MODE_NAMES = {"nn": "신경망 모델", "ml": "머신러닝 모델", "blend": "두 모델 결합"}
+MODE_NAMES = {"optimal": "최적 조합", "nn": "신경망 모델", "ml": "머신러닝 모델", "blend": "두 모델 결합"}
 
 FEATURE_KO = {
     "active_days": "활동 날짜 수", "session_count": "세션 수", "song_count": "재생 곡 수",
@@ -102,15 +96,60 @@ def prepare_X(df: pd.DataFrame) -> pd.DataFrame:
     missing = [c for c in FEATURES if c not in df.columns]
     if missing:
         raise ValueError(f"필요한 열이 없습니다: {missing}")
-    X = df[FEATURES].copy()
+    checked = df.copy()
+    if 'user_id' not in checked:
+        checked['user_id'] = [f'검사{i}' for i in range(len(checked))]
+    X = prepare_customers(checked)[FEATURES].copy()
+    X.index = df.index
     for c in NUMERIC:
         X[c] = pd.to_numeric(X[c], errors="coerce").astype(float)
     X["level_last"] = X["level_last"].map(lambda v: LEVEL_MAP.get(str(v).strip().lower(), np.nan)).astype(float)
+    X.attrs['customer_ids']=checked['user_id'].astype(str).tolist()
+    X.attrs['as_of']=df.attrs.get('as_of',load_data_date())
     return X
 
 
 def load_team_data(path: Path = DATA) -> pd.DataFrame:
     return pd.read_csv(path, dtype={"user_id": str}, encoding="utf-8-sig")
+
+
+class OriginalPipelineAdapter:
+    """숫자로 변환한 요금제를 복원해 기존 전처리 포함 모델에 전달합니다."""
+    classes_ = np.array([0,1])
+
+    def __init__(self,pipeline):
+        self.pipeline=pipeline
+
+    def predict_proba(self,X):
+        raw=X.copy()
+        raw['level_last']=raw['level_last'].map({0.0:'free',1.0:'paid'})
+        return self.pipeline.predict_proba(raw[FEATURES])
+
+
+def service_signature():
+    files=[DATA,ROOT/'models.py']
+    files += [p for p in (ROOT/'model').rglob('*') if p.suffix in ['.pkl','.cbm','.joblib','.pth','.pt','.json']]
+    files += list((ROOT/'data/processed').glob('*.npy'))+list((ROOT/'data/processed').glob('*_20181101_v1.csv'))
+    files += list((STORE/'sequence_inputs').glob('*.npz'))
+    return tuple((str(path),path.stat().st_mtime_ns,path.stat().st_size) for path in sorted(set(files)) if path.is_file())
+
+
+def consistent_song_features(frame,changed=None):
+    out=frame.copy()
+    if changed=='song_count_change':
+        recent=out['previous_7d_song_count']+out['song_count_change']
+        out['recent_7d_song_count']=recent.clip(lower=0)
+        out['previous_7d_song_count']=out['recent_7d_song_count']-out['song_count_change']
+    total_week=out['recent_7d_song_count']+out['previous_7d_song_count']
+    if changed=='song_count':
+        over=total_week>out['song_count']
+        ratio=out.loc[over,'song_count']/total_week[over]
+        out.loc[over,'recent_7d_song_count']=np.floor(out.loc[over,'recent_7d_song_count']*ratio)
+        out.loc[over,'previous_7d_song_count']=np.floor(out.loc[over,'previous_7d_song_count']*ratio)
+    else:
+        out['song_count']=np.maximum(out['song_count'],total_week)
+    out['song_count_change']=out['recent_7d_song_count']-out['previous_7d_song_count']
+    return out
 
 
 def _has(pkg: str) -> bool:
@@ -250,6 +289,14 @@ class Service:
     def model_scores(self, key: str, X: pd.DataFrame) -> np.ndarray:
         return self.to_score(key, self.models[key].predict_proba(X)[:, 1])
 
+    def setting_model_scores(self, s, key, X):
+        if s.mode=='optimal':return self.models[key].predict_proba(X)[:,1]*100
+        return self.model_scores(key,X)
+
+    def validate_population(self, s, df):
+        if isinstance(self.models[s.nn],SequenceAdapter):
+            self.models[s.nn].bank.validate(df,df.attrs.get('as_of',load_data_date()))
+
     def combine(self, s: Setting, ml_s: np.ndarray, nn_s: np.ndarray) -> np.ndarray:
         if s.mode == "ml":
             return ml_s
@@ -257,12 +304,15 @@ class Service:
             return nn_s
         return s.ml_weight * ml_s + (1 - s.ml_weight) * nn_s
 
-    def scores(self, s: Setting, df: pd.DataFrame) -> pd.DataFrame:
+    def scores(self, s: Setting, df: pd.DataFrame, _scenario=False) -> pd.DataFrame:
+        if not _scenario:self.validate_population(s,df)
         X = prepare_X(df)
-        ml_s, nn_s = self.model_scores(s.ml, X), self.model_scores(s.nn, X)
+        ml_s, nn_s = self.setting_model_scores(s,s.ml,X), self.setting_model_scores(s,s.nn,X)
         return pd.DataFrame({"ml_score": ml_s, "nn_score": nn_s, "score": self.combine(s, ml_s, nn_s)}, index=df.index)
 
     def split_scores(self, s: Setting, split: str) -> tuple[np.ndarray, np.ndarray]:
+        if s.mode=='optimal':
+            return self.combine(s,self.probs[f'{s.ml}_{split}']*100,self.probs[f'{s.nn}_{split}']*100),self.probs[f'y_{split}']
         ml_s = self.to_score(s.ml, self.probs[f"{s.ml}_{split}"])
         nn_s = self.to_score(s.nn, self.probs[f"{s.nn}_{split}"])
         return self.combine(s, ml_s, nn_s), self.probs[f"y_{split}"]
@@ -270,14 +320,19 @@ class Service:
     def threshold(self, s: Setting) -> float:
         if not s.use_saved:
             return float(s.manual_threshold)
+        if s.mode=='optimal':return float(self.reg['optimal']['best_threshold'])*100
         return _f2_threshold(*self.split_scores(s, "valid"))
 
-    def model_threshold(self, key: str, kind: str) -> float:
+    def model_threshold(self, key: str, kind: str, setting=None) -> float:
+        if setting is not None and setting.mode=='optimal':
+            return _f2_threshold(self.probs[f'{key}_valid']*100,self.probs['y_valid'])
         base = Setting(ml=key if kind == "ml" else self.reg["default"]["ml"],
                        nn=key if kind == "nn" else self.reg["default"]["nn"], mode=kind)
         return self.threshold(base)
 
     def evaluate(self, s: Setting, split: str = "test") -> dict:
+        if split != 'valid':
+            raise ValueError('운영 앱에서는 검증 자료만 조회합니다. 최종 평가는 모델과 설정을 확정한 뒤 별도로 수행하세요.')
         sc, y = self.split_scores(s, split)
         thr = self.threshold(s)
         pred = (sc >= thr).astype(int)
@@ -301,12 +356,13 @@ class Service:
     def contributions(self, s: Setting, df: pd.DataFrame) -> pd.DataFrame:
         """값 = 현재 점수 − (그 피처만 유지 고객 기준값으로 바꾼 점수). 양수면 그 값이 위험을 올림."""
         X = prepare_X(df)
-        base = self.combine(s, self.model_scores(s.ml, X), self.model_scores(s.nn, X))
+        base = self.combine(s, self.setting_model_scores(s,s.ml,X), self.setting_model_scores(s,s.nn,X))
         out = {}
         for f in FEATURES:
             Xc = X.copy()
             Xc[f] = LEVEL_MAP[self.reference[f]] if f == "level_last" else self.reference[f]
-            out[f] = base - self.combine(s, self.model_scores(s.ml, Xc), self.model_scores(s.nn, Xc))
+            Xc = consistent_song_features(Xc,f)
+            out[f] = base - self.combine(s, self.setting_model_scores(s,s.ml,Xc), self.setting_model_scores(s,s.nn,Xc))
         return pd.DataFrame(out, index=df.index)
 
     def reasons(self, row: pd.Series, contrib: pd.Series, top: int = 3) -> list[dict]:
@@ -333,7 +389,7 @@ class Service:
         """고객 목록: 점수, 판정, 두 모델 비교, 주요 이유, 추천 활동."""
         sc = self.scores(s, df)
         thr = self.threshold(s)
-        thr_ml, thr_nn = self.model_threshold(s.ml, "ml"), self.model_threshold(s.nn, "nn")
+        thr_ml, thr_nn = self.model_threshold(s.ml, "ml",s), self.model_threshold(s.nn, "nn",s)
         contrib = self.contributions(s, df)
         r1, r2, acts = [], [], []
         for idx in df.index:
@@ -349,11 +405,13 @@ class Service:
         return out
 
     def what_if(self, s: Setting, row: pd.Series, changes: dict) -> tuple[float, float]:
-        a = pd.DataFrame([row[FEATURES].to_dict()])
+        a = pd.DataFrame([row[['user_id']+FEATURES].to_dict()])
         b = a.copy()
         for k, v in changes.items():
             b.loc[0, k] = v
-        return float(self.scores(s, a)["score"].iloc[0]), float(self.scores(s, b)["score"].iloc[0])
+        changed='song_count' if 'song_count' in changes else 'song_count_change' if 'song_count_change' in changes else None
+        b = consistent_song_features(b,changed)
+        return float(self.scores(s, a)["score"].iloc[0]), float(self.scores(s, b,_scenario=True)["score"].iloc[0])
 
     # 캠페인 ---------------------------------------------------
     def campaign(self, s: Setting, population: int, value: float, cost: float, success: float,
@@ -366,7 +424,8 @@ class Service:
             k = max(1, int(round(q * len(y))))
             rows.append({"frac": q, "precision": cum[k - 1] / k, "recall": cum[k - 1] / max(y.sum(), 1)})
         g = pd.DataFrame(rows)
-        g["contacts"] = np.maximum(1, np.round(g["frac"] * population)).astype(int)
+        g=pd.concat([pd.DataFrame([{'frac':0.0,'precision':0.0,'recall':0.0}]),g],ignore_index=True)
+        g["contacts"] = np.where(g['frac']==0,0,np.maximum(1, np.round(g["frac"] * population))).astype(int)
         g["churners"] = g["precision"] * g["contacts"]
         g["saved"] = g["churners"] * success
         g["cost"] = g["contacts"] * cost
@@ -401,10 +460,9 @@ def _direction(f, value, ref):
 
 
 def default_setting(svc: Service) -> Setting:
-    """검증 PR-AUC가 가장 좋은 운영 방식(신경망 / 머신러닝 / 50:50 결합)을 기본값으로."""
-    d = svc.reg["default"]
-    cands = [Setting(d["ml"], d["nn"], m) for m in ("nn", "ml", "blend")]
-    return max(cands, key=lambda s: average_precision_score(*svc.split_scores(s, "valid")[::-1]))
+    """팀원이 확정한 모델·확률 비중·판정 기준을 그대로 사용합니다."""
+    config=svc.reg['optimal']
+    return Setting(Path(config['best_ml_model']).stem,'lstm_sequence',mode='optimal',ml_weight=float(config['ml_weight']))
 
 
 SETTING_FILE = "settings.json"
@@ -422,7 +480,10 @@ def load_setting(svc: "Service", store: Path = STORE) -> Setting:
         try:
             d = json.loads(f.read_text(encoding="utf-8"))
             s = Setting(**d)
-            if s.ml in svc.models and s.nn in svc.models and s.mode in MODE_NAMES:
+            if s.ml in svc.models and s.nn in svc.models and s.mode in MODE_NAMES and 0<=s.ml_weight<=1 and 0<=s.manual_threshold<=100:
+                if s.mode=='optimal':
+                    fixed=default_setting(svc)
+                    return Setting(fixed.ml,fixed.nn,mode='optimal',ml_weight=fixed.ml_weight,use_saved=s.use_saved,manual_threshold=s.manual_threshold)
                 return s
         except Exception:
             pass
@@ -430,17 +491,83 @@ def load_setting(svc: "Service", store: Path = STORE) -> Setting:
 
 
 def load_service(model_dir: Path = MODEL_DIR, data_path: Path = DATA, progress=None) -> Service:
-    need = [model_dir / "registry.json", model_dir / "probs.npz"]
-    if not all(f.exists() for f in need):
-        train_all(model_dir, data_path, progress)
-    reg = json.loads((model_dir / "registry.json").read_text(encoding="utf-8"))
-    try:
-        models = {k: joblib.load(model_dir / f"{k}.joblib") for k in reg["models"]}
-    except Exception:  # 다른 버전 라이브러리로 저장된 파일이면 다시 학습
-        reg = train_all(model_dir, data_path, progress)
-        models = {k: joblib.load(model_dir / f"{k}.joblib") for k in reg["models"]}
-    z = np.load(model_dir / "probs.npz")
-    return Service(models=models, reg=reg, probs={k: z[k] for k in z.files}, team=load_team_data(data_path))
+    team = load_team_data(data_path)
+    if team['user_id'].isna().any() or team['user_id'].duplicated().any():
+        raise ValueError('공통 자료의 고객 번호 누락 또는 중복을 확인하세요.')
+    if set(team['split']) != {'train','valid','test'}:
+        raise ValueError('공통 학습·검증·최종 평가 분할이 필요합니다.')
+    valid = team[team['split']=='valid']
+    valid.attrs['as_of']='2018-11-01'
+    Xv = prepare_X(valid)
+    Xv.attrs['reference_input']=True
+    yv = valid['churn'].to_numpy(dtype=int)
+    models, specs, unavailable = {}, {}, []
+    titles = {'ab_model':'에이다부스트','lr_model':'로지스틱 회귀','rf_model':'랜덤 포레스트','lgb_model':'라이트지비엠','catboost_model':'캐트부스트'}
+    for path in sorted((ROOT/'model/machine_learning').glob('*')):
+        if path.suffix not in ['.pkl','.cbm','.joblib']:
+            continue
+        try:
+            if path.suffix=='.cbm':
+                from catboost import CatBoostClassifier
+                model = CatBoostClassifier();model.load_model(path)
+            else:
+                model = joblib.load(path)
+            names = getattr(model,'feature_names_in_',getattr(model,'feature_names_',None))
+            if names is None or list(names)!=FEATURES:
+                raise ValueError('학습 피처 이름과 순서가 공통 14개 항목과 다릅니다.')
+            if list(model.classes_) != [0,1]:
+                raise ValueError('정답 1의 예측 확률을 확인할 수 없습니다.')
+            key=path.stem
+            models[key]=model
+            specs[key]={'name':titles.get(key,path.stem),'kind':'ml','source':str(path.relative_to(ROOT)), 'training_split_verified':False}
+        except Exception as error:
+            unavailable.append({'file':path.name,'reason':str(error)})
+    for path in sorted((ROOT/'model/deep_learning').glob('*.joblib')):
+        try:
+            saved=joblib.load(path)
+            if not isinstance(saved,dict) or saved.get('feature_columns')!=FEATURES or 'pipeline' not in saved:
+                raise ValueError('전처리와 피처 목록을 포함한 신경망 묶음이 필요합니다.')
+            key=path.stem
+            models[key]=OriginalPipelineAdapter(saved['pipeline'])
+            specs[key]={'name':'다층 신경망 · 공통 피처','kind':'nn','source':str(path.relative_to(ROOT)), 'training_split_verified':True}
+        except Exception as error:
+            unavailable.append({'file':path.name,'reason':str(error)})
+    models['lstm_sequence']=SequenceAdapter(ROOT,FEATURES)
+    specs['lstm_sequence']={'name':'장단기 기억 신경망','kind':'nn','source':'model/deep_learning/lstm_model_weights.pth','training_split_verified':True}
+    for path in sorted((ROOT/'model/deep_learning').glob('*')):
+        if path.name=='lstm_model_weights.pth':continue
+        if path.suffix in ['.pth','.pt']:
+            unavailable.append({'file':path.name,'reason':'시퀀스 입력의 행동 사전·패딩·길이·고객 연결 규칙이 없어 연결 보류. 임의 입력으로 예측하지 않습니다.'})
+    probs={'y_valid':yv}
+    for key in list(models):
+        try:
+            p=models[key].predict_proba(Xv)[:,1]
+            if not np.isfinite(p).all():raise ValueError('유한하지 않은 예측값')
+            probs[key+'_valid']=p
+            specs[key].update(valid_pr_auc=float(average_precision_score(yv,p)),valid_roc_auc=float(roc_auc_score(yv,p)),iterations=0)
+        except Exception as error:
+            unavailable.append({'file':specs[key]['source'],'reason':str(error)})
+            del models[key];del specs[key]
+    ml=[key for key in specs if specs[key]['kind']=='ml']
+    nn=[key for key in specs if specs[key]['kind']=='nn']
+    if not ml or not nn:
+        raise ValueError('호환되는 머신러닝 모델과 신경망 모델이 각각 하나 이상 필요합니다. 자동 재학습은 수행하지 않습니다.')
+    retained=team[(team['split']=='train')&(team['churn']==0)]
+    reference={c:float(retained[c].median()) for c in NUMERIC}
+    reference['level_last']=str(retained['level_last'].mode().iloc[0])
+    reg={'models':specs,'default':{'ml':max(ml,key=lambda key:specs[key]['valid_pr_auc']),'nn':max(nn,key=lambda key:specs[key]['valid_pr_auc'])},
+         'optimal':json.loads((ROOT/'model/best_hybrid_config.json').read_text(encoding='utf-8')),
+         'reference':reference,'base_rate':{'valid':float(yv.mean())},'unavailable':unavailable,
+         'data_sha256':hashlib.sha256(Path(data_path).read_bytes()).hexdigest(),
+         'evaluation_scope':'검증 연결 점검. 제공 모델의 원래 학습 분할은 별도 확인 필요. 최종 평가 미실시.'}
+    config=reg['optimal']
+    if config['best_dl_model']!='lstm_model_weights.pth' or Path(config['best_ml_model']).stem not in models:
+        raise ValueError('최적 설정의 모델과 현재 연결 코드가 다릅니다. 인수인계 안내서의 모델 교체 절차를 확인하세요.')
+    weights=[float(config[k]) for k in ['ml_weight','dl_weight']]
+    if not all(np.isfinite(v) and 0<=v<=1 for v in weights) or not np.isclose(sum(weights),1) or not 0<=float(config['best_threshold'])<=1:
+        raise ValueError('최적 설정의 비중 합과 판정 기준을 확인하세요.')
+    if progress:progress(1.0,'저장된 모델 연결 완료 · 재학습 없음')
+    return Service(models=models,reg=reg,probs=probs,team=team)
 
 
 # ---------------------------------------------------------------
@@ -452,7 +579,7 @@ HISTORY = "history.csv"
 
 def default_customers(team: pd.DataFrame) -> pd.DataFrame:
     """기본 분석 자료 = 학습에 쓰지 않은 테스트 고객 (실제 결과는 검증용으로만 표시)."""
-    return team[team["split"] == "test"][["user_id"] + FEATURES + ["churn"]].reset_index(drop=True)
+    return team[team["split"] == "valid"][["user_id"] + FEATURES + ["churn"]].reset_index(drop=True)
 
 
 def load_customers(team: pd.DataFrame, store: Path = STORE) -> pd.DataFrame:
@@ -461,13 +588,37 @@ def load_customers(team: pd.DataFrame, store: Path = STORE) -> pd.DataFrame:
         df = pd.read_csv(f, dtype={"user_id": str}, encoding="utf-8-sig")
         if "churn" not in df.columns:
             df["churn"] = np.nan
+        errors,_=check_upload(df)
+        if errors:raise ValueError('저장 고객 자료 검사 실패: '+' / '.join(errors))
         return df
     return default_customers(team)
 
 
-def save_customers(df: pd.DataFrame, store: Path = STORE) -> None:
+def load_data_date(store: Path = STORE):
+    f=store/'data_metadata.json'
+    return json.loads(f.read_text(encoding='utf-8')).get('as_of','2018-11-01') if f.exists() else '2018-11-01'
+
+
+def save_customers(df: pd.DataFrame, store: Path = STORE, as_of=None) -> None:
     store.mkdir(parents=True, exist_ok=True)
+    errors,_=check_upload(df)
+    if errors:raise ValueError(' / '.join(errors))
+    current=store/CURRENT
+    if current.is_file():
+        import shutil
+        backup=store/'backups';backup.mkdir(exist_ok=True)
+        shutil.copyfile(current,backup/f'customers_{datetime.now():%Y%m%d_%H%M%S_%f}.csv')
     df.to_csv(store / CURRENT, index=False, encoding="utf-8-sig")
+    day=str(as_of) if as_of is not None else load_data_date(store)
+    (store/'data_metadata.json').write_text(json.dumps({'as_of':day},ensure_ascii=False),encoding='utf-8')
+
+
+def reset_customers(store: Path = STORE):
+    current=store/CURRENT
+    if current.is_file():
+        backup=store/'backups';backup.mkdir(parents=True,exist_ok=True)
+        current.replace(backup/f'reset_{datetime.now():%Y%m%d_%H%M%S_%f}.csv')
+    (store/'data_metadata.json').write_text(json.dumps({'as_of':'2018-11-01'}),encoding='utf-8')
 
 
 def log_history(action: str, detail: str, total: int, store: Path = STORE) -> None:
@@ -497,26 +648,45 @@ def check_upload(df: pd.DataFrame) -> tuple[list[str], list[str]]:
         v = pd.to_numeric(df[c], errors="coerce")
         bad = int(v.isna().sum() - df[c].isna().sum())
         if bad:
-            warns.append(f"{c}: 숫자가 아닌 값 {bad}개 → 결측으로 처리")
+            errors.append(f"{c}: 숫자가 아닌 값 {bad}개를 수정하세요.")
         if c != "song_count_change" and (v < 0).any():
-            warns.append(f"{c}: 음수 값 {int((v < 0).sum())}개")
+            errors.append(f"{c}: 허용하지 않는 음수 값 {int((v < 0).sum())}개")
     odd = sorted(set(df["level_last"].dropna().astype(str).str.strip().str.lower()) - set(LEVEL_MAP))
     if odd:
-        warns.append(f"level_last: 알 수 없는 값 {odd[:5]} → 결측으로 처리 (free/paid만 인식)")
+        errors.append(f"level_last: 알 수 없는 값 {odd[:5]}을 수정하세요. free/paid만 인식합니다.")
+    try:
+        if df['user_id'].isna().any() or df['user_id'].astype(str).str.strip().eq('').any():
+            raise InputError('고객 번호가 비어 있습니다.')
+        prepare_customers(df.drop_duplicates('user_id',keep='last'))
+        if 'churn' in df:
+            truth=pd.to_numeric(df['churn'],errors='coerce')
+            if not truth.dropna().isin([0,1]).all() or (truth.isna()&df['churn'].notna()).any():
+                raise InputError('실제 해지 정답은 비워 두거나 0과 1로만 입력하세요.')
+    except InputError as error:
+        errors.append(str(error))
     return errors, warns
 
 
 def merge_customers(current: pd.DataFrame, new: pd.DataFrame, mode: str, on_conflict: str) -> tuple[pd.DataFrame, dict]:
     """mode: append(추가·갱신) | replace(교체). on_conflict: keep(기존 유지) | update(새 자료로 갱신)."""
+    errors,_=check_upload(new)
+    if errors:raise ValueError(' / '.join(errors))
     new = new.copy()
     new["user_id"] = new["user_id"].astype(str).str.strip()
     new = new.drop_duplicates("user_id", keep="last")
+    checked=prepare_customers(new)
+    for column in FEATURES:
+        new[column]=checked[column].to_numpy()
     if "churn" not in new.columns:
         new["churn"] = np.nan
+    else:
+        new['churn']=pd.to_numeric(new['churn'],errors='coerce')
     new = new[["user_id"] + FEATURES + ["churn"]]
     if mode == "replace":
         return new.reset_index(drop=True), {"added": len(new), "updated": 0, "kept": 0, "total": len(new)}
     cur = current.set_index("user_id")
+    for column in NUMERIC:
+        cur[column]=pd.to_numeric(cur[column],errors='raise').astype(float)
     nw = new.set_index("user_id")
     overlap = nw.index.intersection(cur.index)
     fresh = nw.loc[~nw.index.isin(cur.index)]
@@ -549,9 +719,7 @@ def uplift_test(n_t: int, churn_t: int, n_c: int, churn_c: int) -> dict:
 
 
 if __name__ == "__main__":
-    import core  # 저장 파일이 'core' 모듈 이름을 가리키도록 (앱과 같은 이름)
-
-    r = core.train_all(progress=lambda f, m: print(f"[{f:4.0%}] {m}"))
-    for k, v in r["models"].items():
-        print(f"  {v['name']:<26} 검증 PR-AUC {v['valid_pr_auc']:.4f}  테스트 PR-AUC {v['test_pr_auc']:.4f}  "
-              f"테스트 ROC-AUC {v['test_roc_auc']:.4f}")
+    service=load_service()
+    print('저장 모델 연결 완료. 학습과 최종 평가를 수행하지 않았습니다.')
+    for key,entry in service.reg['models'].items():
+        print(entry['name'], '검증 평균정밀도', round(entry['valid_pr_auc'],4))
