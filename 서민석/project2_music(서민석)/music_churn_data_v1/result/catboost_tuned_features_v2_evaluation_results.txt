@@ -1,0 +1,132 @@
+정형 입력: C:\project2_music\music_churn_data_v1\data\processed\customer_features_20181101_v1_with_split.csv
+시퀀스 입력: C:\project2_music\music_churn_data_v1\data\processed\customer_sequences_20181101_v1.jsonl
+분할 크기: train=12,697, valid=2,721, test=2,721
+학습 이탈 비율: 5.70%
+기본 피처 수: 14; 선택 시퀀스 추가 후: 32
+원본 데이터 파일은 수정하지 않았습니다.
+valid PR-AUC 기준 저장 모델: 기본 피처
+기본 피처 설정: params={'iterations': 1200, 'depth': 3, 'learning_rate': 0.05, 'l2_leaf_reg': 3, 'random_strength': 0.5}, class_weight=SqrtBalanced
+기본 피처 valid PR-AUC=0.1731, 임계값=0.343074, valid F1=0.2455
+선택 시퀀스 피처 설정: params={'iterations': 1000, 'depth': 6, 'learning_rate': 0.02, 'l2_leaf_reg': 10, 'random_strength': 1.5}, class_weight=SqrtBalanced
+선택 시퀀스 피처 valid PR-AUC=0.1624, 임계값=0.295472, valid F1=0.2314
+선택된 저장 모델의 상위 피처 중요도:
+  ad_count: 16.1945
+  thumbs_up_count: 14.6844
+  thumbs_down_count: 11.5971
+  song_count: 10.5834
+  session_count: 8.5167
+  playlist_add_count: 7.3723
+  active_days: 7.2029
+  days_since_last_activity: 5.5862
+  level_last: 5.4627
+  song_count_change: 4.1661
+  help_count: 2.5735
+  previous_7d_song_count: 2.5214
+  recent_7d_song_count: 2.4729
+  error_count: 1.0658
+하이퍼파라미터/가중치 비교:
+기본 피처 | weight=Balanced, params={'iterations': 1200, 'depth': 3, 'learning_rate': 0.05, 'l2_leaf_reg': 3, 'random_strength': 0.5}: valid PR-AUC=0.1560, best_iteration=205
+기본 피처 | weight=Balanced, params={'iterations': 1600, 'depth': 4, 'learning_rate': 0.03, 'l2_leaf_reg': 5, 'random_strength': 1.0}: valid PR-AUC=0.1634, best_iteration=192
+기본 피처 | weight=Balanced, params={'iterations': 1200, 'depth': 5, 'learning_rate': 0.03, 'l2_leaf_reg': 8, 'random_strength': 1.0}: valid PR-AUC=0.1591, best_iteration=240
+기본 피처 | weight=Balanced, params={'iterations': 1000, 'depth': 6, 'learning_rate': 0.02, 'l2_leaf_reg': 10, 'random_strength': 1.5}: valid PR-AUC=0.1589, best_iteration=228
+기본 피처 | weight=SqrtBalanced, params={'iterations': 1200, 'depth': 3, 'learning_rate': 0.05, 'l2_leaf_reg': 3, 'random_strength': 0.5}: valid PR-AUC=0.1731, best_iteration=245
+기본 피처 | weight=SqrtBalanced, params={'iterations': 1600, 'depth': 4, 'learning_rate': 0.03, 'l2_leaf_reg': 5, 'random_strength': 1.0}: valid PR-AUC=0.1675, best_iteration=140
+기본 피처 | weight=SqrtBalanced, params={'iterations': 1200, 'depth': 5, 'learning_rate': 0.03, 'l2_leaf_reg': 8, 'random_strength': 1.0}: valid PR-AUC=0.1598, best_iteration=240
+기본 피처 | weight=SqrtBalanced, params={'iterations': 1000, 'depth': 6, 'learning_rate': 0.02, 'l2_leaf_reg': 10, 'random_strength': 1.5}: valid PR-AUC=0.1676, best_iteration=227
+선택 시퀀스 피처 | weight=Balanced, params={'iterations': 1200, 'depth': 3, 'learning_rate': 0.05, 'l2_leaf_reg': 3, 'random_strength': 0.5}: valid PR-AUC=0.1093, best_iteration=0
+선택 시퀀스 피처 | weight=Balanced, params={'iterations': 1600, 'depth': 4, 'learning_rate': 0.03, 'l2_leaf_reg': 5, 'random_strength': 1.0}: valid PR-AUC=0.1564, best_iteration=352
+선택 시퀀스 피처 | weight=Balanced, params={'iterations': 1200, 'depth': 5, 'learning_rate': 0.03, 'l2_leaf_reg': 8, 'random_strength': 1.0}: valid PR-AUC=0.1603, best_iteration=131
+선택 시퀀스 피처 | weight=Balanced, params={'iterations': 1000, 'depth': 6, 'learning_rate': 0.02, 'l2_leaf_reg': 10, 'random_strength': 1.5}: valid PR-AUC=0.1602, best_iteration=496
+선택 시퀀스 피처 | weight=SqrtBalanced, params={'iterations': 1200, 'depth': 3, 'learning_rate': 0.05, 'l2_leaf_reg': 3, 'random_strength': 0.5}: valid PR-AUC=0.0940, best_iteration=0
+선택 시퀀스 피처 | weight=SqrtBalanced, params={'iterations': 1600, 'depth': 4, 'learning_rate': 0.03, 'l2_leaf_reg': 5, 'random_strength': 1.0}: valid PR-AUC=0.0959, best_iteration=0
+선택 시퀀스 피처 | weight=SqrtBalanced, params={'iterations': 1200, 'depth': 5, 'learning_rate': 0.03, 'l2_leaf_reg': 8, 'random_strength': 1.0}: valid PR-AUC=0.1605, best_iteration=258
+선택 시퀀스 피처 | weight=SqrtBalanced, params={'iterations': 1000, 'depth': 6, 'learning_rate': 0.02, 'l2_leaf_reg': 10, 'random_strength': 1.5}: valid PR-AUC=0.1624, best_iteration=328
+===== test 변화: 선택 시퀀스 피처 - 기본 피처 =====
+PR-AUC 변화: -0.0119
+F1 변화:     -0.0084
+Recall 변화: +0.0774
+Precision 변화: -0.0345
+===== 기본 피처 | 검증(valid) (2,721명) =====
+적용 임계값: 0.343074
+Accuracy:  0.8916
+Precision: 0.2043
+Recall:    0.3077
+F1-score:  0.2455
+ROC-AUC:   0.7219
+PR-AUC:    0.1731
+분류 리포트:
+              precision    recall  f1-score   support
+
+           0       0.96      0.93      0.94      2565
+           1       0.20      0.31      0.25       156
+
+    accuracy                           0.89      2721
+   macro avg       0.58      0.62      0.59      2721
+weighted avg       0.91      0.89      0.90      2721
+
+혼동 행렬 (행=실제, 열=예측):
+[[2378  187]
+ [ 108   48]]
+===== 기본 피처 | 최종 평가(test) (2,721명) =====
+적용 임계값: 0.343074
+Accuracy:  0.8934
+Precision: 0.1973
+Recall:    0.2839
+F1-score:  0.2328
+ROC-AUC:   0.7356
+PR-AUC:    0.1782
+분류 리포트:
+              precision    recall  f1-score   support
+
+           0       0.96      0.93      0.94      2566
+           1       0.20      0.28      0.23       155
+
+    accuracy                           0.89      2721
+   macro avg       0.58      0.61      0.59      2721
+weighted avg       0.91      0.89      0.90      2721
+
+혼동 행렬 (행=실제, 열=예측):
+[[2387  179]
+ [ 111   44]]
+===== 선택 시퀀스 피처 | 검증(valid) (2,721명) =====
+적용 임계값: 0.295472
+Accuracy:  0.8559
+Precision: 0.1667
+Recall:    0.3782
+F1-score:  0.2314
+ROC-AUC:   0.7096
+PR-AUC:    0.1624
+분류 리포트:
+              precision    recall  f1-score   support
+
+           0       0.96      0.88      0.92      2565
+           1       0.17      0.38      0.23       156
+
+    accuracy                           0.86      2721
+   macro avg       0.56      0.63      0.58      2721
+weighted avg       0.91      0.86      0.88      2721
+
+혼동 행렬 (행=실제, 열=예측):
+[[2270  295]
+ [  97   59]]
+===== 선택 시퀀스 피처 | 최종 평가(test) (2,721명) =====
+적용 임계값: 0.295472
+Accuracy:  0.8578
+Precision: 0.1628
+Recall:    0.3613
+F1-score:  0.2244
+ROC-AUC:   0.7284
+PR-AUC:    0.1663
+분류 리포트:
+              precision    recall  f1-score   support
+
+           0       0.96      0.89      0.92      2566
+           1       0.16      0.36      0.22       155
+
+    accuracy                           0.86      2721
+   macro avg       0.56      0.62      0.57      2721
+weighted avg       0.91      0.86      0.88      2721
+
+혼동 행렬 (행=실제, 열=예측):
+[[2278  288]
+ [  99   56]]

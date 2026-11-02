@@ -1,0 +1,70 @@
+데이터 파일: C:\project2_music\music_churn_data_v1\data\processed\customer_features_20181101_v1_with_split.csv
+분할 크기: train=12,697, valid=2,721, test=2,721
+학습 이탈 비율: 5.70%
+선택된 설정: {'n_estimators': 700, 'max_depth': 10, 'min_samples_leaf': 10}
+valid PR-AUC: 0.1441
+valid에서 선택한 임계값: 0.500000 (F1=0.2089)
+상위 15개 피처 중요도:
+  numeric__song_count: 0.1118
+  numeric__thumbs_down_count: 0.1030
+  numeric__ad_count: 0.0925
+  numeric__session_count: 0.0920
+  numeric__days_since_last_activity: 0.0896
+  numeric__active_days: 0.0868
+  numeric__thumbs_up_count: 0.0787
+  numeric__song_count_change: 0.0686
+  numeric__playlist_add_count: 0.0676
+  numeric__recent_7d_song_count: 0.0673
+  numeric__previous_7d_song_count: 0.0657
+  numeric__help_count: 0.0407
+  numeric__error_count: 0.0156
+  categorical__level_last_paid: 0.0102
+  categorical__level_last_free: 0.0101
+valid PR-AUC | {'n_estimators': 300, 'max_depth': None, 'min_samples_leaf': 1}: 0.1222
+valid PR-AUC | {'n_estimators': 500, 'max_depth': None, 'min_samples_leaf': 3}: 0.1343
+valid PR-AUC | {'n_estimators': 500, 'max_depth': 12, 'min_samples_leaf': 3}: 0.1224
+valid PR-AUC | {'n_estimators': 500, 'max_depth': 20, 'min_samples_leaf': 5}: 0.1371
+valid PR-AUC | {'n_estimators': 700, 'max_depth': 10, 'min_samples_leaf': 10}: 0.1441
+valid PR-AUC | {'n_estimators': 500, 'max_depth': 8, 'min_samples_leaf': 1}: 0.1378
+===== 검증(valid) 성능 (2,721명) =====
+적용 임계값: 0.500000
+Accuracy:  0.8497
+Precision: 0.1496
+Recall:    0.3462
+F1-score:  0.2089
+ROC-AUC:   0.7041
+PR-AUC:    0.1441
+분류 리포트:
+              precision    recall  f1-score   support
+
+           0       0.96      0.88      0.92      2565
+           1       0.15      0.35      0.21       156
+
+    accuracy                           0.85      2721
+   macro avg       0.55      0.61      0.56      2721
+weighted avg       0.91      0.85      0.88      2721
+
+혼동 행렬 (행=실제, 열=예측):
+[[2258  307]
+ [ 102   54]]
+===== 최종 평가(test) 성능 (2,721명) =====
+적용 임계값: 0.500000
+Accuracy:  0.8600
+Precision: 0.1771
+Recall:    0.4000
+F1-score:  0.2455
+ROC-AUC:   0.7190
+PR-AUC:    0.1669
+분류 리포트:
+              precision    recall  f1-score   support
+
+           0       0.96      0.89      0.92      2566
+           1       0.18      0.40      0.25       155
+
+    accuracy                           0.86      2721
+   macro avg       0.57      0.64      0.58      2721
+weighted avg       0.92      0.86      0.88      2721
+
+혼동 행렬 (행=실제, 열=예측):
+[[2278  288]
+ [  93   62]]

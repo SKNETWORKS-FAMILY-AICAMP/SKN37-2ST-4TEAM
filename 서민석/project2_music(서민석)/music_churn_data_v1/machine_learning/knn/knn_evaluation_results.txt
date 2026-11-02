@@ -1,0 +1,58 @@
+데이터 파일: C:\project2_music\music_churn_data_v1\data\processed\customer_features_20181101_v1_with_split.csv
+분할 크기: train=12,697, valid=2,721, test=2,721
+선택된 설정: {'n_neighbors': 51, 'weights': 'distance'}
+valid PR-AUC: 0.1438
+valid에서 선택한 임계값: 0.131444 (F1=0.1963)
+하이퍼파라미터 비교:
+valid PR-AUC | k= 5, weights=uniform : 0.0722
+valid PR-AUC | k= 5, weights=distance: 0.0732
+valid PR-AUC | k=11, weights=uniform : 0.0837
+valid PR-AUC | k=11, weights=distance: 0.0932
+valid PR-AUC | k=21, weights=uniform : 0.1251
+valid PR-AUC | k=21, weights=distance: 0.1326
+valid PR-AUC | k=31, weights=uniform : 0.1281
+valid PR-AUC | k=31, weights=distance: 0.1365
+valid PR-AUC | k=51, weights=uniform : 0.1326
+valid PR-AUC | k=51, weights=distance: 0.1438
+===== 검증(valid) 성능 (2,721명) =====
+적용 임계값: 0.131444
+Accuracy:  0.8886
+Precision: 0.1674
+Recall:    0.2372
+F1-score:  0.1963
+ROC-AUC:   0.6623
+PR-AUC:    0.1438
+분류 리포트:
+              precision    recall  f1-score   support
+
+           0       0.95      0.93      0.94      2565
+           1       0.17      0.24      0.20       156
+
+    accuracy                           0.89      2721
+   macro avg       0.56      0.58      0.57      2721
+weighted avg       0.91      0.89      0.90      2721
+
+혼동 행렬 (행=실제, 열=예측):
+[[2381  184]
+ [ 119   37]]
+===== 최종 평가(test) 성능 (2,721명) =====
+적용 임계값: 0.131444
+Accuracy:  0.8945
+Precision: 0.1972
+Recall:    0.2774
+F1-score:  0.2306
+ROC-AUC:   0.6920
+PR-AUC:    0.1696
+분류 리포트:
+              precision    recall  f1-score   support
+
+           0       0.96      0.93      0.94      2566
+           1       0.20      0.28      0.23       155
+
+    accuracy                           0.89      2721
+   macro avg       0.58      0.60      0.59      2721
+weighted avg       0.91      0.89      0.90      2721
+
+혼동 행렬 (행=실제, 열=예측):
+[[2391  175]
+ [ 112   43]]

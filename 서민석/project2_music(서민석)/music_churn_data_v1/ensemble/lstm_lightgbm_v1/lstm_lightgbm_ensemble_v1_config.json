@@ -1,0 +1,41 @@
+{
+  "method": "late fusion weighted probability average",
+  "weight_selection_metric": "validation ROC-AUC",
+  "threshold_selection_metric": "validation F2",
+  "lightgbm_weight": 0.88,
+  "lstm_weight": 0.12,
+  "valid_roc_auc": 0.7097415904433448,
+  "valid_pr_auc": 0.16549460873733637,
+  "threshold_choices": {
+    "F2 maximum (recall-oriented)": {
+      "threshold": 0.5393665486824364,
+      "precision": 0.13333333333333333,
+      "recall": 0.5256410256410257,
+      "f1": 0.2127107652399481,
+      "f2": 0.3309120258272801
+    },
+    "Recall at least 70%": {
+      "threshold": 0.4077786462978996,
+      "precision": 0.09795570698466781,
+      "recall": 0.7371794871794872,
+      "f1": 0.17293233082706766,
+      "f2": 0.3197997775305895
+    },
+    "Recall at least 80%": {
+      "threshold": 0.3614600180749298,
+      "precision": 0.08846426043878274,
+      "recall": 0.8012820512820513,
+      "f1": 0.15933715742511154,
+      "f2": 0.3068237604320079
+    }
+  },
+  "component_paths": {
+    "lightgbm": "C:\\project2_music\\music_churn_data_v1\\machine_learning\\lightgbm\\lightgbm_v1.joblib",
+    "lstm": "C:\\project2_music\\music_churn_data_v1\\deep_learning\\lstm\\lstm_v1.pt"
+  },
+  "split_sizes": {
+    "train": 12697,
+    "valid": 2721,
+    "test": 2721
+  }
+}

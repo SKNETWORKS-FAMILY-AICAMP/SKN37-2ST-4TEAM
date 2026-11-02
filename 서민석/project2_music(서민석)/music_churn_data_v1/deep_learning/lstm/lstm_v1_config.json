@@ -1,0 +1,45 @@
+{
+  "model": "lstm",
+  "best_epoch": 3,
+  "best_valid_f2": 0.24381984422621064,
+  "positive_class_weight": 16.537292817679557,
+  "decision_threshold": 0.4663941562175751,
+  "threshold_selection_metric": "valid F2",
+  "threshold_choices": {
+    "F2 maximum (recall-oriented)": {
+      "threshold": 0.4663941562175751,
+      "precision": 0.061829111206526406,
+      "recall": 0.9230769230769231,
+      "f1": 0.1158953722334004,
+      "f2": 0.24381984422621064
+    },
+    "F1 maximum": {
+      "threshold": 0.5076884031295776,
+      "precision": 0.06814449917898194,
+      "recall": 0.532051282051282,
+      "f1": 0.12081513828238719,
+      "f2": 0.2252985884907709
+    },
+    "Recall at least 70%": {
+      "threshold": 0.49637556076049805,
+      "precision": 0.0642148277875073,
+      "recall": 0.7051282051282052,
+      "f1": 0.11771000535045478,
+      "f2": 0.23534445870774498
+    },
+    "Recall at least 80%": {
+      "threshold": 0.4776207506656647,
+      "precision": 0.06331006979062812,
+      "recall": 0.8141025641025641,
+      "f1": 0.11748381128584644,
+      "f2": 0.2414448669201521
+    }
+  },
+  "max_sequence_length": 50,
+  "vocabulary_size": 19,
+  "split_sizes": {
+    "train": 12697,
+    "valid": 2721,
+    "test": 2721
+  }
+}

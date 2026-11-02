@@ -1,0 +1,63 @@
+# =============================================================
+# 고객 이탈 예측 - gradient boosting 학습 설정
+# 경로는 프로젝트 폴더(이 파일의 상위 폴더) 기준 상대 경로입니다.
+# =============================================================
+
+paths:
+  data: data/customer_features_20181101_v1_with_split.csv   # 팀 공통 피처 표 (split 열 포함)
+  hash_list: data/파일목록_및_해시.json                      # 있으면 sha256으로 데이터 버전 확인
+  models_dir: models
+  reports_dir: reports
+
+# 팀 공통 데이터 정의 (data/README_DATA.md)
+#   관찰 2018-10-04 ~ 2018-11-01 (28일) / 예측 2018-11-01 ~ 2018-11-15 (14일)
+#   churn = 1: 예측 기간에 Cancellation Confirmation 확인
+data:
+  id_col: user_id
+  target: churn
+  split_col: split          # train / valid / test (팀 공통 분할을 그대로 사용, 다시 나누지 않음)
+  numeric:
+    - active_days
+    - session_count
+    - song_count
+    - days_since_last_activity
+    - recent_7d_song_count
+    - previous_7d_song_count
+    - song_count_change
+    - thumbs_up_count
+    - thumbs_down_count
+    - playlist_add_count
+    - ad_count
+    - error_count
+    - help_count
+  categorical:
+    - level_last            # free / paid
+
+# 학습할 모델 (설치 안 된 패키지는 자동으로 건너뜀)
+#   hist_gb : sklearn HistGradientBoostingClassifier
+#   gbm     : sklearn GradientBoostingClassifier (전통적인 gradient boosting)
+#   lightgbm: LightGBM
+#   xgboost : XGBoost
+#   catboost: CatBoost
+models: [hist_gb, gbm, lightgbm, xgboost, catboost]
+
+tuning:
+  n_iter: 25                # 모델마다 시도할 하이퍼파라미터 조합 수
+  cv_folds: 5               # 학습셋 안에서 층화 K-겹 교차검증
+  scoring: average_precision  # PR-AUC 기준으로 탐색
+  n_jobs: -1                # 탐색을 CPU 코어 수만큼 병렬로 (모델 자체는 1스레드)
+  random_state: 42
+
+evaluation:
+  selection_metric: pr_auc  # 검증셋에서 이 값이 가장 높은 모델을 최종 모델로
+  threshold_strategy: max_fbeta   # max_fbeta: F-beta 최대 / target_recall: 목표 재현율 달성
+  beta: 2.0                 # 2면 재현율을 정밀도보다 2배 중시 (이탈자를 놓치는 비용이 더 큼)
+  target_recall: 0.7
+  top_k_pct: [0.05, 0.1, 0.2]     # 확률 상위 k% 고객만 관리할 때 잡아내는 이탈자 비율
+  overfit_gap_warn: 0.05    # 학습-검증 PR-AUC 차이가 이보다 크면 과적합 경고
+  learning_curve: true
+
+explain:
+  n_repeats: 10             # 순열 중요도 반복 횟수
+  pdp_top: 6                # 부분 의존도 그림을 그릴 상위 피처 수
+  shap_sample: 2000         # SHAP 계산에 쓸 검증셋 고객 수

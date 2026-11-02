@@ -1,0 +1,71 @@
+데이터 파일: C:\project2_music\music_churn_data_v1\data\processed\customer_features_20181101_v1_with_split.csv
+분할 크기: train=12,697, valid=2,721, test=2,721
+학습 이탈 비율: 5.70%
+scale_pos_weight (train 음성/양성 비율): 16.5373
+선택된 설정: {'n_estimators': 600, 'max_depth': 3, 'learning_rate': 0.03, 'min_child_weight': 3}
+valid PR-AUC: 0.1528
+valid에서 선택한 임계값: 0.653066 (F1=0.2146)
+상위 15개 피처 중요도:
+  numeric__active_days: 0.1963
+  numeric__session_count: 0.1682
+  numeric__thumbs_down_count: 0.1214
+  numeric__ad_count: 0.0680
+  numeric__song_count: 0.0552
+  numeric__recent_7d_song_count: 0.0527
+  numeric__song_count_change: 0.0479
+  categorical__level_last_free: 0.0446
+  numeric__playlist_add_count: 0.0445
+  numeric__days_since_last_activity: 0.0443
+  numeric__thumbs_up_count: 0.0427
+  numeric__previous_7d_song_count: 0.0416
+  numeric__help_count: 0.0404
+  numeric__error_count: 0.0322
+  categorical__level_last_paid: 0.0000
+valid PR-AUC | {'n_estimators': 300, 'max_depth': 3, 'learning_rate': 0.05, 'min_child_weight': 1}: 0.1524
+valid PR-AUC | {'n_estimators': 600, 'max_depth': 3, 'learning_rate': 0.03, 'min_child_weight': 3}: 0.1528
+valid PR-AUC | {'n_estimators': 300, 'max_depth': 5, 'learning_rate': 0.05, 'min_child_weight': 3}: 0.1291
+valid PR-AUC | {'n_estimators': 600, 'max_depth': 5, 'learning_rate': 0.03, 'min_child_weight': 5}: 0.1361
+valid PR-AUC | {'n_estimators': 500, 'max_depth': 4, 'learning_rate': 0.05, 'min_child_weight': 5}: 0.1486
+valid PR-AUC | {'n_estimators': 500, 'max_depth': 6, 'learning_rate': 0.03, 'min_child_weight': 5}: 0.1345
+===== 검증(valid) 성능 (2,721명) =====
+적용 임계값: 0.653066
+Accuracy:  0.8736
+Precision: 0.1667
+Recall:    0.3013
+F1-score:  0.2146
+ROC-AUC:   0.7048
+PR-AUC:    0.1528
+분류 리포트:
+              precision    recall  f1-score   support
+
+           0       0.96      0.91      0.93      2565
+           1       0.17      0.30      0.21       156
+
+    accuracy                           0.87      2721
+   macro avg       0.56      0.60      0.57      2721
+weighted avg       0.91      0.87      0.89      2721
+
+혼동 행렬 (행=실제, 열=예측):
+[[2330  235]
+ [ 109   47]]
+===== 최종 평가(test) 성능 (2,721명) =====
+적용 임계값: 0.653066
+Accuracy:  0.8769
+Precision: 0.1715
+Recall:    0.3032
+F1-score:  0.2191
+ROC-AUC:   0.7310
+PR-AUC:    0.1782
+분류 리포트:
+              precision    recall  f1-score   support
+
+           0       0.96      0.91      0.93      2566
+           1       0.17      0.30      0.22       155
+
+    accuracy                           0.88      2721
+   macro avg       0.56      0.61      0.58      2721
+weighted avg       0.91      0.88      0.89      2721
+
+혼동 행렬 (행=실제, 열=예측):
+[[2339  227]
+ [ 108   47]]

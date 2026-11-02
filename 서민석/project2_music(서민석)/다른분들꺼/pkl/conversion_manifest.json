@@ -1,0 +1,34 @@
+{
+  "saved_result_bundles": [
+    {
+      "file": "logistic_regression_results.pkl",
+      "artifact_type": "evaluation_results_bundle",
+      "source": "C:\\project2_music\\다른분들꺼\\logistic_regression",
+      "size_bytes": 180374
+    },
+    {
+      "file": "mlp_results.pkl",
+      "artifact_type": "evaluation_results_bundle",
+      "source": "C:\\project2_music\\다른분들꺼\\mlp",
+      "size_bytes": 248329
+    },
+    {
+      "file": "svm_results.pkl",
+      "artifact_type": "evaluation_results_bundle",
+      "source": "C:\\project2_music\\다른분들꺼\\svm",
+      "size_bytes": 158686
+    },
+    {
+      "file": "random_forest_results.pkl",
+      "artifact_type": "notebook_results_bundle",
+      "source": "C:\\project2_music\\다른분들꺼\\02_랜덤포레스트_모델링.ipynb",
+      "size_bytes": 208371
+    }
+  ],
+  "churn_gbm": {
+    "model_files_found": [],
+    "report_files_found": [],
+    "status": "no generated model or report files found; source code only"
+  },
+  "important": "These pickle files contain evaluation tables/notebook outputs, not fitted model objects. The source CSV/JSON/PNG/IPYNB files are left unchanged."
+}
