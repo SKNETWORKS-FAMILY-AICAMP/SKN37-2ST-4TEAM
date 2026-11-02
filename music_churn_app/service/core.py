@@ -502,7 +502,9 @@ def load_service(model_dir: Path = MODEL_DIR, data_path: Path = DATA, progress=N
     Xv.attrs['reference_input']=True
     yv = valid['churn'].to_numpy(dtype=int)
     models, specs, unavailable = {}, {}, []
-    titles = {'ab_model':'에이다부스트','lr_model':'로지스틱 회귀','rf_model':'랜덤 포레스트','lgb_model':'라이트지비엠','catboost_model':'캐트부스트'}
+    titles = {'ab_model':'에이다부스트','lr_model':'로지스틱 회귀','rf_model':'랜덤 포레스트','lgb_model':'라이트지비엠','catboost_model':'캐트부스트',
+              'xgb_model':'엑스지부스트','hgb_model':'히스토그램 그래디언트 부스팅','et_model':'엑스트라 트리','dt_model':'결정 트리',
+              'knn_model':'최근접 이웃','nb_model':'나이브 베이즈','svc_model':'서포트 벡터 머신','mlp_model':'다층 신경망 · 정형'}
     for path in sorted((ROOT/'model/machine_learning').glob('*')):
         if path.suffix not in ['.pkl','.cbm','.joblib']:
             continue
