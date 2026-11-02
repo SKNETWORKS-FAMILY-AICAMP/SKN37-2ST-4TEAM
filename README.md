@@ -21,7 +21,7 @@
 
 검증 연결 점검에서 이탈 고객 156명 중 133명을 찾았고, 선정한 640명 중 실제 이탈 고객은 133명이었습니다. **이는 연결 점검 결과이며 독립적인 최종 성능이나 실제 이탈 방지 성과가 아닙니다.**
 
-작성 기준: 2026년 11월 2일. 앱 이미지는 실제 캡처 교체 전의 기능 설명 도식입니다.
+작성 기준: 2026년 11월 2일. 앱 화면은 팀에서 촬영한 실제 시연 영상에서 추출했습니다.
 
 ### 기술 스택
 
@@ -60,6 +60,7 @@
 | [7](#section-7) | 구조와 실행 | 기능을 어떻게 나누고 재현하는가? |
 | [8](#section-8) | 결과와 한계 | 완료한 것과 남은 것은 무엇인가? |
 | [9](#section-9) | 산출물과 평가 항목 | 평가 근거는 어디에 있는가? |
+| [10](#section-10) | 앱 시연 영상 | 앱 실행 없이 기능을 어떻게 확인하는가? |
 
 ---
 
@@ -304,35 +305,34 @@ flowchart LR
 | 대응 계획 | 캠페인에서 비용과 가정한 성공률을 입력해 연락 인원과 예상 이익을 비교 |
 | 결과 기록 | 홈의 대응 결과 확인에서 실제 대응군·비교군의 같은 14일 결과를 수동 입력 |
 
-### 화면으로 보는 운영 흐름
+### 실제 화면으로 보는 운영 흐름
 
-아래 이미지는 **구현 기능을 설명하기 위한 예시 도식**이며 실제 앱 실행 화면이나 수행 성과의 증거가 아닙니다.
+팀에서 촬영한 시연 영상의 실제 화면입니다. 아래 화면을 클릭하면 해당 전체 영상 파일을 열 수 있습니다. 앱을 실행할 수 없는 발표 환경에서는 [마지막 시연 영상](#section-10)을 사용합니다.
 
-**① 관리 목록 — 고객이 있는 위험 구간을 펼쳐 혜택 제안을 확인합니다.**
+**① 관리 목록 — 운영 기준과 고객 선정 방식을 확인합니다.**
 
-![교체용 예시 화면: 관리 목록](assets/screens/01_관리목록.png)
+[![실제 앱의 관리 목록](assets/screens/01_관리목록.png)](assets/demo/01_home.mp4)
 
+**② 고객 상세 — 위험 점수와 확인 신호, 추천 대응을 살펴봅니다.**
 
-**② 고객 상세 — 고객 한 명의 위험 점수와 확인 신호를 살펴봅니다.**
-
-![교체용 예시 화면: 고객 상세](assets/screens/02_고객상세.png)
-
+[![실제 앱의 고객 상세](assets/screens/02_고객상세.png)](assets/demo/02_customer.mp4)
 
 <details>
-<summary>캠페인 계획과 대응 결과 기록 화면 보기</summary>
+<summary>캠페인·고객 자료·설정 화면 보기</summary>
 
-**③ 캠페인 — 가정한 비용과 성공률로 대응 계획을 비교합니다.**
+**캠페인:** 입력 비용과 가정한 성공률에 따른 예상 손익입니다. 실제 캠페인 성과가 아닙니다.
 
-![교체용 예시 화면: 캠페인 계획](assets/screens/03_캠페인계획.png)
+[![실제 앱의 캠페인 계획](assets/screens/03_캠페인계획.png)](assets/demo/03_campaign.mp4)
 
+**고객 자료:** 같은 기준일의 정형 고객표와 신경망 입력을 등록하고 관리합니다.
 
-**④ 대응 결과 — 실제 캠페인 결과를 입력하고 비교할 수 있습니다.**
+[![실제 앱의 고객 자료](assets/screens/04_고객자료.png)](assets/demo/04_data.mp4)
 
-![교체용 예시 화면: 대응 결과 확인](assets/screens/04_대응결과.png)
+**설정과 분석 자료:** 저장된 최적 조합의 연결 상태와 상세 설정을 확인합니다.
 
+[![실제 앱의 설정](assets/screens/05_설정.png)](assets/demo/05_settings.mp4)
 
 </details>
-
 
 <details>
 <summary>점수 구간과 혜택 예시·모의 실행 범위 보기</summary>
@@ -468,3 +468,48 @@ python -m streamlit run service/app.py
 ```
 
 앱 실행에는 포함된 자료와 모델을 사용합니다. 원본 로그와 실제 운영 기록은 포함하지 않습니다. 탐색 노트북은 당시 실험 기록으로, 390개 후보 전체 재실행에는 당시 후보 모델 전체와 같은 입력 변환 자료 및 경로 설정이 추가로 필요합니다. 현재 모델 묶음은 앱 추론용이며 전체 후보 학습 산출물과 같지 않습니다.
+
+<a id="section-10"></a>
+
+## 10. 앱 시연 영상
+
+다른 컴퓨터에서 앱을 실행하지 않아도 녹화된 기능을 확인할 수 있습니다.
+
+**[전체 시연 영상 파일 내려받기](https://raw.githubusercontent.com/SKNETWORKS-FAMILY-AICAMP/SKN37-2ST-4TEAM/main/assets/demo/00_full_demo.mp4)** · 약 2분 28초 · 관리 목록 → 고객 상세 → 캠페인 → 고객 자료 → 설정 순서
+
+아래 움직이는 이미지는 각 영상의 일부를 보여주는 짧은 미리보기입니다. 소리는 없으며, 전체 길이와 녹화된 소리는 영상 파일에 포함됩니다. 전체 영상은 내려받아 재생합니다.
+
+### 관리 목록 미리보기
+
+![관리 목록 시연의 짧은 미리보기](assets/demo/01_home.gif)
+
+<details>
+<summary>고객 상세·캠페인·고객 자료·설정 미리보기 펼치기</summary>
+
+**고객 상세**
+
+![고객 상세 시연의 짧은 미리보기](assets/demo/02_customer.gif)
+
+**캠페인**
+
+![캠페인 시연의 짧은 미리보기](assets/demo/03_campaign.gif)
+
+**고객 자료**
+
+![고객 자료 시연의 짧은 미리보기](assets/demo/04_data.gif)
+
+**설정과 분석 자료**
+
+![설정 시연의 짧은 미리보기](assets/demo/05_settings.gif)
+
+</details>
+
+| 개별 시연 영상 | 길이 | 영상 파일 |
+|---|---|---|
+| 관리 목록 | 약 24초 | [내려받기](https://raw.githubusercontent.com/SKNETWORKS-FAMILY-AICAMP/SKN37-2ST-4TEAM/main/assets/demo/01_home.mp4) |
+| 고객 상세 | 약 35초 | [내려받기](https://raw.githubusercontent.com/SKNETWORKS-FAMILY-AICAMP/SKN37-2ST-4TEAM/main/assets/demo/02_customer.mp4) |
+| 캠페인 계획 | 약 37초 | [내려받기](https://raw.githubusercontent.com/SKNETWORKS-FAMILY-AICAMP/SKN37-2ST-4TEAM/main/assets/demo/03_campaign.mp4) |
+| 고객 자료 | 약 31초 | [내려받기](https://raw.githubusercontent.com/SKNETWORKS-FAMILY-AICAMP/SKN37-2ST-4TEAM/main/assets/demo/04_data.mp4) |
+| 설정과 분석 자료 | 약 21초 | [내려받기](https://raw.githubusercontent.com/SKNETWORKS-FAMILY-AICAMP/SKN37-2ST-4TEAM/main/assets/demo/05_settings.mp4) |
+
+시연은 예측·고객 선정·대응 계획 기능의 동작을 보여줍니다. 실제 알림 발송이나 이탈 감소 성과를 뜻하지 않습니다.
