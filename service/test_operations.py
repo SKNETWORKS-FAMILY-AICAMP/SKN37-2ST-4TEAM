@@ -71,8 +71,9 @@ class OperationTests(unittest.TestCase):
         self.assertEqual(app.radio(key='nav').value,'🏠 홈')
         self.assertEqual(app.radio(key='nav').options,['🏠 홈','👤 고객 상세','💰 캠페인','🗂️ 고객 자료','⚙️ 설정'])
         self.assertEqual([t.label for t in app.tabs],['대응 고객 목록','대응 결과 확인'])
-        self.assertIn('추천 대응',app.dataframe[0].value.columns)
-        self.assertNotIn('실제 해지(검증용)',app.dataframe[0].value.columns)
+        # 홈 첫 화면에 점수 구간별 표가 먼저 나오므로, 화면의 표 가운데 대응 고객 목록이 있는지 확인
+        self.assertTrue(any('추천 대응' in frame.value.columns for frame in app.dataframe))
+        self.assertFalse(any('실제 해지(검증용)' in frame.value.columns for frame in app.dataframe))
         self.assertEqual(len(app.get('plotly_chart')),0)
         self.assertTrue(any('아직 기록한 대응 결과가 없습니다' in item.value for item in app.info))
         button=next(b for b in app.button if b.label=='고객 상세 열기')
@@ -89,7 +90,7 @@ class OperationTests(unittest.TestCase):
             with patch.object(O,'save_campaign',side_effect=lambda r:save(r,store)), \
                  patch.object(O,'load_campaigns',side_effect=lambda:load(store)):
                 app=AppTest.from_file(str(Path(__file__).parent/'app.py'),default_timeout=90).run()
-                next(w for w in app.text_input if w.label=='캠페인 이름').set_value('추천 개선 실제 결과')
+                next(w for w in app.text_input if w.label.startswith('캠페인')).set_value('추천 개선 실제 결과')
                 for label,value in [('대응군 고객 수',400),('대응군 이탈 고객 수',40),
                                     ('비교군 고객 수',400),('비교군 이탈 고객 수',60)]:
                     next(w for w in app.number_input if w.label==label).set_value(value)

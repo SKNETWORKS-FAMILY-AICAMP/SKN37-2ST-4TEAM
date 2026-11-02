@@ -1,0 +1,20 @@
+{
+  "source": "수정본 저장소의 하위 폴더",
+  "as_of": "2018-11-01",
+  "sequence_length": 50,
+  "vocab_size": 50,
+  "ml_key": "ab_model",
+  "nn_key": "lstm_sequence",
+  "verified_saved_predictions": true,
+  "raw_log_encoder_available": false,
+  "notes": "고객별 분할 배열로 재현한 예측이 제공된 저장 예측과 일치합니다. 원시 로그 변환 규칙은 별도 확인이 필요합니다.",
+  "assets": {
+    "model/machine_learning/ab_model.pkl": "6425464153bf914a1c5c9403bc8bbb6ea82554bcf99ebef446d19cf412e4c1a2",
+    "model/deep_learning/lstm_model_weights.pth": "3bc1c1880744fb491e4b7ac743c146cf474ddc51d15ae86ab9a5a19a76ef6f64",
+    "model/best_hybrid_config.json": "dee881231e4164ee8962985713fa3f9a1f8659e32efc78c9574ad150894d810f",
+    "models.py": "ecb6db0cdd4157f46cbb35597612a2aa788929d5cf3275904b92b4f4fa19cf4c",
+    "data/processed/test.npy": "b89c26d0b2c8cbe22017d790df2e59b23f4d4994b9684a0dafecfde4e648cbac",
+    "data/processed/train.npy": "d1270cb659f811ed879ea2385083f1c4d64afb9bd6891b46b02f7e84a262f148",
+    "data/processed/valid.npy": "61a239ca355cd208c52c631d644962fe47926c00fa02a78d6a671829ce3a07aa"
+  }
+}

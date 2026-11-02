@@ -190,9 +190,14 @@ if page == PAGES[0]:
             a, b, d = st.columns([1.3, 1.2, 1])
             method = a.radio("선정 방식", ["점수 구간별 관리", "판정 기준", "상위 N명", "예산"], horizontal=True)
             if method == "점수 구간별 관리":
-                st.caption("메모장에 적은 위험 점수 구간으로 고객을 나누고, 각 구간의 혜택 안내 푸시를 시뮬레이션합니다.")
+                st.caption("위험 점수 구간으로 고객을 나누고, 각 구간의 혜택 안내 푸시를 시뮬레이션합니다. 기본 구간은 현재 점수의 상위 40·20·10·5·1% 지점입니다.")
                 threshold_cols = st.columns(5)
-                defaults = [30, 50, 70, 80, 90]
+                # 기본 구간: 현재 점수의 상위 40·20·10·5·1% 지점 (모델이 바뀌어 점수 범위가 달라져도 구간이 비지 않도록)
+                defaults = []
+                for v in (np.percentile(A["score"], [60, 80, 90, 95, 99]) if len(A) else []):
+                    defaults.append(min(99, max(int(v), defaults[-1] + 1 if defaults else 1)))
+                if len(defaults) != 5 or defaults != sorted(set(defaults)):
+                    defaults = [30, 50, 70, 80, 90]
                 threshold_labels = ["관심군 시작", "중위험군 시작", "고위험군 시작", "초고위험군 시작", "최고 위험군 시작"]
                 cutoffs = [int(col.number_input(label, min_value=1, max_value=99, value=default, step=1,
                                                 key=f"risk_cutoff_{i}"))
@@ -202,7 +207,7 @@ if page == PAGES[0]:
                     st.stop()
                 levels = d.multiselect("요금제", ["free", "paid"], default=["free", "paid"],
                                        format_func={"free":"무료", "paid":"유료"}.get)
-                mask = np.ones(N, dtype=bool)
+                mask = A["score"].to_numpy() >= cutoffs[0]   # 저위험군은 선택에서 제외
             elif method == "판정 기준":
                 thr = b.slider("위험 점수 기준", 0.0, 100.0, float(THR), 0.5, format="%.1f")
                 mask = A["score"].to_numpy() >= thr
@@ -231,7 +236,7 @@ if page == PAGES[0]:
             ]
             st.subheader("점수 구간별 고객과 혜택")
             st.caption("푸시 버튼은 화면 시뮬레이션이며 실제 알림을 보내지 않습니다.")
-            st.info("운영 가이드: 우선은 높은 위험 점수 구간부터 검토하세요. 메모장의 70점 기준은 확률 기준으로 검증된 값이 아니므로, 실제 이탈 결과와 대응군·비교군 결과를 쌓아 조정하세요.")
+            st.info("운영 가이드: 높은 위험 점수 구간부터 검토하세요. 구간 기준은 이탈 확률로 검증된 값이 아니므로, 실제 이탈 결과와 대응군·비교군 결과를 쌓아 조정하세요.")
             for i, (name, low, high, benefit, action) in enumerate(bands):
                 band_mask = (score >= low) & (score < high) & A["level_last"].isin(levels)
                 band = A[band_mask]
@@ -246,7 +251,7 @@ if page == PAGES[0]:
                     if band.empty:
                         st.caption("현재 선택한 요금제에 해당 구간 고객이 없습니다.")
                     elif name == "저위험군":
-                        st.caption("메모장 운영 가이드에 따라 푸시 발송 대상에서 제외합니다.")
+                        st.caption("운영 가이드에 따라 푸시 발송 대상에서 제외합니다.")
                     else:
                         st.dataframe(band[["user_id", "score", "level_last", "action"]].rename(columns={
                             "user_id":"고객 번호", "score":"위험 점수", "level_last":"요금제", "action":"기존 추천 대응"
