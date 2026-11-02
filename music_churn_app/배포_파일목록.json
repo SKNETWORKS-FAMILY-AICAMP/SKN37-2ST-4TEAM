@@ -1,0 +1,227 @@
+[
+  {
+    "파일": "README.md",
+    "바이트": 4637,
+    "sha256": "cce557e74b60508c81ae64141371fd508e3067f436ac8348411b12218479aeaf"
+  },
+  {
+    "파일": "실행_및_통합안내.md",
+    "바이트": 492,
+    "sha256": "429b5274cc0c73c0cb2a9700ca8a466889cb3459da5ee51c6c586e09ed0605a9"
+  },
+  {
+    "파일": "docs/화면수정_모델연결_인수인계.md",
+    "바이트": 8550,
+    "sha256": "fccc83d9707783398cafc1da635174d7afa380ddc0e0a36b2cac8680e14d9781"
+  },
+  {
+    "파일": "run.py",
+    "바이트": 2897,
+    "sha256": "56ddba2f26f4f46ff98dbde558ff84da1e323e6709d7d95be4ef6fa854ecc4b7"
+  },
+  {
+    "파일": "처음설치.bat",
+    "바이트": 902,
+    "sha256": "671ba2cac2e30434e3944875db19a5c4531e0e4a2bf51f0e0b9762bf7e8fee98"
+  },
+  {
+    "파일": "앱실행.bat",
+    "바이트": 255,
+    "sha256": "d7f293f012a610857126476d3f5e234231489e8517fc84393520cc4d27076a28"
+  },
+  {
+    "파일": "requirements.txt",
+    "바이트": 149,
+    "sha256": "508945d0fd7838ec78eb9236a3ac8fb9dca0d12b13bb6d5e4dd30e04ce33d7c9"
+  },
+  {
+    "파일": "requirements_service.txt",
+    "바이트": 21,
+    "sha256": "e6e2dfcb6ceb55a4f47bd7d7227393d63fbcbd4a9bbf0ffce22b7464186d9644"
+  },
+  {
+    "파일": ".gitignore",
+    "바이트": 346,
+    "sha256": "6aa4701aeb86bb7e3692d7cff85dbe6b6144753552de1897f62dcde132423cff"
+  },
+  {
+    "파일": ".streamlit/config.toml",
+    "바이트": 204,
+    "sha256": "8ed53ca6cddfde9871851d9675aa7cf62be0bf991551389e804c895bee6cdfab"
+  },
+  {
+    "파일": "models.py",
+    "바이트": 2832,
+    "sha256": "ecb6db0cdd4157f46cbb35597612a2aa788929d5cf3275904b92b4f4fa19cf4c"
+  },
+  {
+    "파일": "model/best_hybrid_config.json",
+    "바이트": 209,
+    "sha256": "dee881231e4164ee8962985713fa3f9a1f8659e32efc78c9574ad150894d810f"
+  },
+  {
+    "파일": "model/sequence_manifest.json",
+    "바이트": 1178,
+    "sha256": "1a7983fdc893c0f95bc67e3387cb2a6fa60658cf513ec7ffe6999cd91cd5343d"
+  },
+  {
+    "파일": "model/deep_learning/mlp_service.joblib",
+    "바이트": 62247,
+    "sha256": "489dfb5dcc712d5f387251de5eb8f01e348b649adee7c6ddcc3033ff8a3f9100"
+  },
+  {
+    "파일": "model/deep_learning/lstm_model_weights.pth",
+    "바이트": 127726,
+    "sha256": "3bc1c1880744fb491e4b7ac743c146cf474ddc51d15ae86ab9a5a19a76ef6f64"
+  },
+  {
+    "파일": "data/processed/customer_features_20181101_v1_with_split.csv",
+    "바이트": 1137265,
+    "sha256": "0ea779266b01aae67b29ec102dee4a7f54b310dd5a67d66ab6e7ac25484b598e"
+  },
+  {
+    "파일": "reports/모델평가_보고서자료.md",
+    "바이트": 3762,
+    "sha256": "7367f2382c4d563a0a1b641012eaf1b1425b037738d235a3ec3cb6c3f0fe09a4"
+  },
+  {
+    "파일": "reports/신경망_입력자료_확인.json",
+    "바이트": 865,
+    "sha256": "5ffbf030f0cfc03c724fa61908d1f415f6150d481aa93080af36baa7fdf7fab7"
+  },
+  {
+    "파일": "service/app.py",
+    "바이트": 38781,
+    "sha256": "ad4ec5b4eefbdc085cce3d92e7971ae5bc1c78d6a75c0b7f4cbff981ff44c9d8"
+  },
+  {
+    "파일": "service/core.py",
+    "바이트": 39394,
+    "sha256": "0fe2b4a79c7f3d3ef58439328cd33b66e3ca7768dc424d77cefb84de4f14eb53"
+  },
+  {
+    "파일": "service/operating_views.py",
+    "바이트": 4759,
+    "sha256": "fe47478f8f39877b00d2c966978511465a9ed5ac2d28bef7b1b9a8f34cc62d96"
+  },
+  {
+    "파일": "service/operations.py",
+    "바이트": 9497,
+    "sha256": "4ce8eab46b117afbb3380bf5f4e6ed534a092389571463e0b3742e883b2b0802"
+  },
+  {
+    "파일": "service/sequence_runtime.py",
+    "바이트": 6359,
+    "sha256": "fdb3255e542883e6c6118a727aa4b362fd2452998f7db7e7706733bdc9eec525"
+  },
+  {
+    "파일": "service/storage.py",
+    "바이트": 3781,
+    "sha256": "1bd9cddb9b6bc0773dbc58ef8df2c02dc05a97df32aeebd32b56c76b29193abe"
+  },
+  {
+    "파일": "service/test_integration.py",
+    "바이트": 5166,
+    "sha256": "a04eaf4c29fd0b8f183825064d10f68bee116c6bb7c79b052ea38603898f45aa"
+  },
+  {
+    "파일": "service/test_operations.py",
+    "바이트": 5614,
+    "sha256": "e58e3a16788b9ed49e77f2507e81995cc2f505643078dc4a1f56d1c854ef380f"
+  },
+  {
+    "파일": "service/test_sequences.py",
+    "바이트": 3643,
+    "sha256": "89b6468bdbccb745319471c24842167074d044e2736d9d72d7ca2f55dd9a4cbf"
+  },
+  {
+    "파일": "service/ui.py",
+    "바이트": 16701,
+    "sha256": "c3c337d6a50bd3c9825b921ae3aff5a96cf86d288b9a12a7cdac74580a33e3db"
+  },
+  {
+    "파일": "service/validation.py",
+    "바이트": 4944,
+    "sha256": "4594dff2ca013a85ea9bd5c53c9d3f77965b5261d22ba4102def2fe383a71393"
+  },
+  {
+    "파일": "model/machine_learning/ab_model.pkl",
+    "바이트": 65876,
+    "sha256": "6425464153bf914a1c5c9403bc8bbb6ea82554bcf99ebef446d19cf412e4c1a2"
+  },
+  {
+    "파일": "model/machine_learning/lr_model.pkl",
+    "바이트": 2289,
+    "sha256": "7ca63f3016ab5d18b93eaa320194e2aa14543e01114f725c1630ed741dd51255"
+  },
+  {
+    "파일": "model/machine_learning/rf_model.pkl",
+    "바이트": 8023849,
+    "sha256": "df689f0792d7169574081a6eecc2d70c74c4e7fdf088ec31e5b1ded018255ce3"
+  },
+  {
+    "파일": "model/machine_learning/lgb_model.pkl",
+    "바이트": 338260,
+    "sha256": "8daec4028b42b59ea05ed4775c93e12b9557c0d43b540dfc158972765a90070d"
+  },
+  {
+    "파일": "model/machine_learning/catboost_model.cbm",
+    "바이트": 119912,
+    "sha256": "8bcf5623744ee154967b151482a66fdbd850c22ca55be7153279a46d98f6af83"
+  },
+  {
+    "파일": "data/processed/train.npy",
+    "바이트": 2539528,
+    "sha256": "d1270cb659f811ed879ea2385083f1c4d64afb9bd6891b46b02f7e84a262f148"
+  },
+  {
+    "파일": "data/processed/train_20181101_v1.csv",
+    "바이트": 709332,
+    "sha256": "0d49ae090b8746f9fa87fbbd44ede8584c61dc6903af6ebf13dd47c40d63edd0"
+  },
+  {
+    "파일": "data/processed/valid.npy",
+    "바이트": 544328,
+    "sha256": "61a239ca355cd208c52c631d644962fe47926c00fa02a78d6a671829ce3a07aa"
+  },
+  {
+    "파일": "data/processed/valid_20181101_v1.csv",
+    "바이트": 152283,
+    "sha256": "7de6980663b548164a416bd92cc024dc0b818955b4b1da974afa356e5adb574a"
+  },
+  {
+    "파일": "data/processed/test.npy",
+    "바이트": 544328,
+    "sha256": "b89c26d0b2c8cbe22017d790df2e59b23f4d4994b9684a0dafecfde4e648cbac"
+  },
+  {
+    "파일": "data/processed/test_20181101_v1.csv",
+    "바이트": 151865,
+    "sha256": "4d5e8f470cf70466b4aff18f4bdf27a8d36ce45b7661d680a41d9b7e52dff053"
+  },
+  {
+    "파일": "notebooks/딥러닝(이재현).ipynb",
+    "바이트": 21107,
+    "sha256": "05d46fca3de0b16c231880d121c53b3518426aa6afd37021c62be47038a9c59a"
+  },
+  {
+    "파일": "notebooks/머신러닝(이재현).ipynb",
+    "바이트": 25664,
+    "sha256": "f4ab0e05a341cde1ac6688dd932fdc66d80b0c4d302e9e620ba90bc7b59fdcbe"
+  },
+  {
+    "파일": "notebooks/모델_성능_분석.ipynb",
+    "바이트": 31309,
+    "sha256": "3d10462fcdbdbbb353ed131462a81b62813e8cbeea8582bf935de3a56484f63e"
+  },
+  {
+    "파일": "notebooks/최적_모델_탐색.ipynb",
+    "바이트": 15435,
+    "sha256": "00e92f1e1f31a42dfda665827dfeae5a92e019358a7e486aa836d6a6dac9f60b"
+  },
+  {
+    "파일": "reports/통합검사_결과.json",
+    "바이트": 635,
+    "sha256": "ef69f38e3f2bea9acefe3659b6ce9b7e00a6fc33df5432cbc1cfdf762c8f39f0"
+  }
+]

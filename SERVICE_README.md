@@ -56,7 +56,7 @@ streamlit run service/app.py        # 저장소 폴더에서 실행 → http://l
 ```python
 import numpy as np, pandas as pd
 from sklearn.metrics import roc_auc_score
-D = "./data/data/processed"
+D = "./data/data/split"
 Xtr, Xte = np.load(f"{D}/train.npy"), np.load(f"{D}/test.npy")
 ytr = pd.read_csv(f"{D}/train_20181101_v1.csv")["churn"].values
 yte = pd.read_csv(f"{D}/test_20181101_v1.csv")["churn"].values
